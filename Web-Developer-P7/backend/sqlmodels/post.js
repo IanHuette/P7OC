@@ -1,12 +1,12 @@
 
 // TODO update as it was done with User
-const Post = {  
-  userId: { type: String, required: true },
-  imageUrl: { type: String, /*required: true */ },
-  likes: { type: Number, required: true },
-  dislikes: { type: Number, required: true},
-  usersLiked: { type: [String], required: true },
-  usersDisliked: { type: [String], required: true},
+class Post {  
+
+  constructor(content, user_id, created_at) {
+    this.content = content;
+    this.user_id = user_id;
+    this.created_at = created_at;
+  }
 };
 
 module.exports = Post;

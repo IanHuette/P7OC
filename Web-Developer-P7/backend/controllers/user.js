@@ -61,6 +61,9 @@ const login = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
   } else if (process.env.USED_DATABASE === "MySQL") {
     // TODO same logic but with my SQL
+    
+
+
   } else {
     res.status(500).json({ error: "NO DATABASE CONNECTIVITY" });
   }

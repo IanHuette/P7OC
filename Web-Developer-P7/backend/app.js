@@ -1,20 +1,12 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const env = require('dotenv').config();
 const path = require('path');
 const con = require("./database");
 
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
+const { getAllPosts } = require('./controllers/post');
 
-// connection à MongoDB
-if (process.env.USED_DATABASE === "MongoDB") {
-  mongoose.connect(process.env.MONGODB_CREDENTIALS,  //utilisation de env pour la sécurité. Permet de cacher la clé de connection mongoose.
-    { useNewUrlParser: true,
-      useUnifiedTopology: true })
-    .then(() => console.log('Connexion à MongoDB réussie !'))
-    .catch(() => console.log('Connexion à MongoDB échouée !'));
-} else if (process.env.USED_DATABASE === "MySQL") {
   con.connect(function(err) {
     if (err) {
       console.log('Connexion à MySQL échouée !');
@@ -23,8 +15,6 @@ if (process.env.USED_DATABASE === "MongoDB") {
       console.log('Connexion à MySQL réussie !');
     }
   });
-
-}
 
 const app = express();
 // on dit explicitement à Express d'être capable de lire les JSON envoyés dans une requête

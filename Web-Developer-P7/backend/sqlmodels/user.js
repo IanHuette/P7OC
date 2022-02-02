@@ -21,6 +21,12 @@ class User {
     // save() { 
     //     let userSavedOK = false;
     //     // TODO save user in SQL using this function, this method should implement failures
+    //     con.connect(function(err) {
+    //       con.query("CREATE * FROM users", function (err, result, fields) {
+    //         if (err) return false;
+    //         return result;
+    //       });
+    //     }) 
     //     return userSavedOK;
     // }
 

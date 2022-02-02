@@ -1,0 +1,29 @@
+.gpm-banner {
+    background-color: white;
+	text-align: center;
+	padding-bottom: 0px;
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	align-items: center;
+}
+.gpm-title {
+    color: #fd5430;
+}
+.gpm-logo {
+    display: flex;
+    justify-content: center;
+    height: 60px;
+    width: 60px;
+}
+
+.profilbutton {
+    margin-top: 8px;
+    border-radius: 6px;
+    border-color: white;
+    border: 0;
+    height: 25px;
+    margin-left: 20px;
+    background-color: rgb(164, 164, 243);
+    font-weight: bolder;
+}
