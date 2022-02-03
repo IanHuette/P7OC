@@ -4,15 +4,15 @@ const Posts = () => {
 
   const posts = [
     {id: 1, content: "my post", user_id:1, date: "2022-02-03 10:57:12"},
-    {id: 2, content: "my post 2", user_id:1, date: "2022-02-03 10:58:12"},
+    {id: 2, content: "my post 2", user_id:1, date: "2022-02-03 10:56:12"},
     {id: 3, content: "my post 3", user_id:1, date: "2022-02-03 10:59:12"}
   ];
-  console.log(posts);
-
-  /**
-   * const posts = [{id: 1, content: "my post", user_id:1, date: "2022-01-26 20:57:12"}, {id: 2, content: "my post 2", user_id:1, date: "2022-01-26 21:00:12"}, {id: 3, content: "my post 3", user_id:1, date: "2022-01-26 22:00:12"}]
-   * 
-  */
+  posts.sort(function(a, b) {
+    let c = new Date(a.date);
+    let d = new Date(b.date);
+    return c-d;
+}) 
+console.log(posts) 
 
 const posttitle = 'Publications récentes';
   return (
