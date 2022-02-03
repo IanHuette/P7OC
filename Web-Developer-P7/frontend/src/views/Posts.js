@@ -1,5 +1,5 @@
-import '../styles/Post.css';
-import DummyComponent from "./../components/DummyComponent";
+import '../styles/Posts.css';
+import DummyComponent from "../components/DummyComponent";
 
 const Post = () => {
 

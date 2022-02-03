@@ -1,6 +1,6 @@
 import React from "react";
 import Banner from './components/Banner'
-import Post from './views/Post';
+import Post from './views/Posts';
 import SignUp from './views/SignUp';
 import Login from './views/Login';
 import {BrowserRouter as Router, Route, Link, Routes} from "react-router-dom";
