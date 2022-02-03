@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import "./../styles/Login.css";
+import { Link } from "react-router-dom";
 
 const Login = () => (
     <Fragment>
@@ -10,7 +11,7 @@ const Login = () => (
             <label><b>Mot de passe</b></label>
             <input type="password" placeholder="Entrer le mot de passe" name="password" required />
             <input type="submit" id='submit' value='LOGIN' />
-            Vous n'avez pas encore de compte ? <a href="signup.html">S'inscrire</a>
+            Vous n'avez pas encore de compte ? <Link to ="../signup"> S'inscrire</Link>
         </form>
     </Fragment>
 );
