@@ -11,15 +11,15 @@ const User = require("../sqlmodels/user");
  * AFFICHER TOUTES LES POSTS
  */
 const getAllPosts = (req, res, next) => {
-    con.connect(function(err) {
-      if (err) {
-        res.status(500).json({ message: "something wrong, please try again later" });
-      }
-      con.query("SELECT * FROM posts", function (err, result, fields) {
-        if (err) res.status(500).json({ message: "something wrong, please try again later" });
-        res.status(200).json(result);
-      });
+  con.connect(function(err) {
+    if (err) {
+      res.status(500).json({ message: "something wrong, please try again later" });
+    }
+    con.query("SELECT * FROM posts", function (err, result, fields) {
+      if (err) res.status(500).json({ message: "something wrong, please try again later" });
+      res.status(200).json(result);
     });
+  });
   };
 
 /**

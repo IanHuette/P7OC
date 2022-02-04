@@ -33,7 +33,7 @@ const posttitle = 'Publications récentes';
 }
 
 export default Posts
-// ici test affichage manuel du tableau d'object posts (a la place de <li><Post /></li>)
+// ici test affichage manuel du tableau d'object posts (a la place de <li><Post /><li/)
 // {posts.map((post, index) => (
           
 //   <li className="newpost" key={`${post}-${index}`}>{ post.content }</li>
