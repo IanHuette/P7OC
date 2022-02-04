@@ -1,5 +1,6 @@
 import '../styles/Posts.css';
-import DummyComponent from "../components/DummyComponent";
+import Post from '../components/Post';
+
 const Posts = () => {
 
   const posts = [
@@ -23,16 +24,17 @@ const posttitle = 'Publications récentes';
       </form>
       <h2 className="h2position">{posttitle}</h2>
       <ul>
-        {posts.map((post, index) => (
-          
-          <li className="newpost" key={`${post}-${index}`}>{ post.content }</li>
-        ))}
-      </ul>
+      <li><Post /></li>
 
-        <DummyComponent />
+      </ul>
     </div>
       
   )
 }
 
 export default Posts
+// ici test affichage manuel du tableau d'object posts (a la place de <li><Post /></li>)
+// {posts.map((post, index) => (
+          
+//   <li className="newpost" key={`${post}-${index}`}>{ post.content }</li>
+// ))}
