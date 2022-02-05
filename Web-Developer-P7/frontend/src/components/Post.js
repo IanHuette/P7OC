@@ -1,27 +1,12 @@
-import React, { useState } from 'react';
-import Axios from 'axios';
+const Post = props => {
+  const {content} = props;
+  return <li className="newpost">{content}</li>;
+};
 
+export default Post;
 
-const Post = () => {
-
-    // const [post, setPost] = useState("")
-  const [post, setPost] = useState("")
-
-  Axios("http://localhost:5000/api/posts")
-    .then((res) => {
-      setPost(res.data)
-    });
-    
-
-
-  return (
-    <ul>
-      {post.data.map(item => (
-        <li>{item.content}</li>
-      ))}
-    </ul>
-  )
-}
+// const [post, setPost] = useState("")
+// const [post, setPost] = useState("");
 
 //  const [posts, setPosts] = useState({ hits: [] });
 
@@ -55,7 +40,6 @@ const Post = () => {
 //   </li>
 // ))}
 
-export default Post;
 // const [posts, setPosts] = useState({ hits: [] });
 
 // useEffect(async () => {

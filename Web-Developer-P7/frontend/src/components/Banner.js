@@ -1,5 +1,5 @@
 import logo from '../assets/icon.png';
-import '../styles/Banner.css';
+import '../styles/components/Banner.css';
 
 
 const testFunction = () => {

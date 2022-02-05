@@ -5,6 +5,8 @@
 DONT FORGET TO PUSH TO GIT REGULARLY
 
 
+
+QUASI FINIS: 
 - call API to get actual list of posts from backend
 
 FAIT:

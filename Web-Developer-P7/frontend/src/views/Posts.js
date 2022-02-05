@@ -1,21 +1,41 @@
-import '../styles/Posts.css';
+import '../styles/views/Posts.css';
 import Post from '../components/Post';
+import React, { useState, useEffect, useContext } from 'react';
+import axios from "axios";
+import AuthContext from "../contexts/auth/AuthContext";
+import {useNavigate} from "react-router-dom";
 
 const Posts = () => {
 
-  const posts = [
-    {id: 1, content: "my post", user_id:1, date: "2022-02-03 10:57:12"},
-    {id: 2, content: "my post 2", user_id:1, date: "2022-02-03 10:56:12"},
-    {id: 3, content: "my post 3", user_id:1, date: "2022-02-03 10:59:12"}
-  ];
-  posts.sort(function(a, b) {
-    let c = new Date(a.date);
-    let d = new Date(b.date);
-    return c-d;
-}) 
-console.log(posts) 
+  const [posts, setPosts] = useState([]);
+  const authContext = useContext(AuthContext);
+  const {userIsLoggedIn} = authContext;
 
-const posttitle = 'Publications récentes';
+  let navigate = useNavigate();
+
+  useEffect(async () => {
+
+    if(!userIsLoggedIn) {
+      navigate("/login");
+    }
+
+    const apiResponse = await axios("http://localhost:5000/api/posts");
+    const postsFromApi = apiResponse.data;
+
+    postsFromApi.sort((a, b) => {
+      const splittedDateA = a.created_at.split("T");
+      const splittedDateB = b.created_at.split("T");
+      const formattedDateFromMySQLA = splittedDateA[0] + ' ' + splittedDateA[1].split(".000Z")[0];
+      const formattedDateFromMySQLB = splittedDateB[0] + ' ' + splittedDateB[1].split(".000Z")[0];
+      let c = new Date(formattedDateFromMySQLA);
+      let d = new Date(formattedDateFromMySQLB);
+      return d-c;
+    });
+
+    setPosts(postsFromApi);
+  }, []);
+
+  const posttitle = 'Publications récentes';
   return (
     <div className="post-size">
       <form className='form' method="post">
@@ -24,17 +44,13 @@ const posttitle = 'Publications récentes';
       </form>
       <h2 className="h2position">{posttitle}</h2>
       <ul>
-      <li><Post /></li>
-
+        {posts.map((post, index) => (
+          <Post key={`${post}-${index}`} content={post.content}/>
+        ))}
       </ul>
     </div>
-      
-  )
-}
+  );
 
-export default Posts
-// ici test affichage manuel du tableau d'object posts (a la place de <li><Post /><li/)
-// {posts.map((post, index) => (
-          
-//   <li className="newpost" key={`${post}-${index}`}>{ post.content }</li>
-// ))}
+};
+
+export default Posts;
