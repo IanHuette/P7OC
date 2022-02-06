@@ -19,7 +19,7 @@ const Posts = () => {
       navigate("/login");
     }
 
-    const apiResponse = await axios("http://localhost:5000/api/posts");
+    const apiResponse = await axios("http://localhost:8080/api/posts");
     const postsFromApi = apiResponse.data;
 
     postsFromApi.sort((a, b) => {

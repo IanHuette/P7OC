@@ -21,5 +21,4 @@ const App = () => {
         </Router>
     </AuthState>;
 };
-
 export default App

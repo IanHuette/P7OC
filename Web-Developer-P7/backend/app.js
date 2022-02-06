@@ -7,14 +7,14 @@ const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const { getAllPosts } = require('./controllers/post');
 
-  con.connect(function(err) {
-    if (err) {
-      console.log('Connexion à MySQL échouée !');
-      console.log(err);
-    } else {
-      console.log('Connexion à MySQL réussie !');
-    }
-  });
+con.connect(function(err) {
+  if (err) {
+    console.log('Connexion à MySQL échouée !');
+    console.log(err);
+  } else {
+    console.log('Connexion à MySQL réussie !');
+  }
+});
 
 const app = express();
 // on dit explicitement à Express d'être capable de lire les JSON envoyés dans une requête

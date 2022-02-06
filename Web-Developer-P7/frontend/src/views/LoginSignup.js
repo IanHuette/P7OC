@@ -3,6 +3,7 @@ import "./../styles/views/LoginSignup.css";
 import { Link, useLocation } from "react-router-dom";
 import AuthContext from '../contexts/auth/AuthContext';
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
 import validate from '../validateInfo';
 
 const LoginSignup = () => {
@@ -31,17 +32,34 @@ const LoginSignup = () => {
         setEmail(e.target.value);
     };
 
-    const onSubmit = e => {
+    const onSubmit = async e => {
+
         e.preventDefault();
+
+        let apiResult;
+        
+        // send to correct backend route case login or signup
         if (submitType.current.value === 'SIGNUP') {
-            
+            apiResult = await axios.post("http://localhost:8080/api/auth/signup", {
+                username: username,
+                password: password,
+                email: email,
+            });
+            alert("Compte crée avec succès, vous pouvez vous connectez")
+            window.location.assign("/login")
+        } else if (submitType.current.value === 'LOGIN') {
+            apiResult = await axios.post("http://localhost:8080/api/auth/login", {
+                username: username,
+                password: password,
+            });
+            logUserIn(true);
         }
-        // TODO send to correct backend route case login or signup
-        console.log(submitType.current.value);
+
+        console.log(apiResult);
         // TODO wait for the API response to see if logged in or not
         // TODO error handling
 
-        logUserIn(true);
+        
         navigate("/");
     };
 
