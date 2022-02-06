@@ -3,6 +3,7 @@ import "./../styles/views/LoginSignup.css";
 import { Link, useLocation } from "react-router-dom";
 import AuthContext from '../contexts/auth/AuthContext';
 import {useNavigate} from "react-router-dom";
+import validate from '../validateInfo';
 
 const LoginSignup = () => {
 
@@ -18,9 +19,23 @@ const LoginSignup = () => {
 
     let navigate = useNavigate();
 
+    const onUsernameChange = e => {
+        setUsername(e.target.value);
+    };
+
+    const onPasswordChange = e => {
+        setPassword(e.target.value);
+    };
+
+    const onEmailChange = e => {
+        setEmail(e.target.value);
+    };
+
     const onSubmit = e => {
         e.preventDefault();
-
+        if (submitType.current.value === 'SIGNUP') {
+            
+        }
         // TODO send to correct backend route case login or signup
         console.log(submitType.current.value);
         // TODO wait for the API response to see if logged in or not
@@ -28,18 +43,6 @@ const LoginSignup = () => {
 
         logUserIn(true);
         navigate("/");
-    };
-
-    const onUsernameChange = e => {
-        setUsername(e.target.value);
-    };
-    
-    const onPasswordChange = e => {
-        setPassword(e.target.value);
-    };
-
-    const onEmailChange = e => {
-        setEmail(e.target.value);
     };
 
     return <Fragment>
@@ -64,7 +67,6 @@ const LoginSignup = () => {
             }
         </form>
     </Fragment>
-
 };
 
 

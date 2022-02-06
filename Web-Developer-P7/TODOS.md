@@ -12,4 +12,4 @@
 
 ## FONCTIONNALITES BONUS
 
-1. pouvoir mettre en place un système de notification sur les nouveaux post ( 5 nouveaux post depuis votre derniere visite )
+1. pouvoir mettre en place un système de notification sur les nouveaux posts ( 5 nouveaux post depuis votre derniere visite )
