@@ -3,6 +3,8 @@ const Post = props => {
   return <li className="newpost">{content}</li>;
 };
 
+
+
 export default Post;
 
 // const [post, setPost] = useState("")

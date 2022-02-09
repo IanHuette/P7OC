@@ -44,6 +44,15 @@ const createPost = (req, res, next) => {
   }
   else if (process.env.USED_DATABASE === "MySQL"){
 
+    con.connect(function(err) {
+      if (err) {
+        res.status(500).json({ message: "something wrong, please try again later" });
+      }
+      con.query(`INSERT INTO posts SET ?`, function (err, result, fields){
+        if (err) res.status(500).json({ message: "something wrong, please try again later" });
+        res.status(200).json(result);
+      })
+    })
   }
 };
 

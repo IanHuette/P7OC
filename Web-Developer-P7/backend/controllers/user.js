@@ -3,6 +3,7 @@ const User = require('../sqlmodels/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const con = require("../database");
+const user = require('../mongomodels/user');
 
 const errorMessage500 = "Désolé, nous avons rencontré un problème veuillez réessayer plus tard !";
 
@@ -36,67 +37,71 @@ const signup = async (req, res, next) => {
 
 // TODO READ 
 const login = async (req, res, next) => {
-  const {username} = req.body;
-
+    // 1- récupérer le password envoyé par le user dans la requête
+  const username = req.body.username;
+  const password = req.body.password;
   try {
-    const compare = await bcrypt.compare(req.body.password, username.password)
-    const mySQLQueryFind = new Promise((acc, rej) => {
+    const mySQLQuery2 = new Promise( (accept, reject) => {
       con.query(
-        "SELECT * FROM users WHERE username = ?;",
-        [username, compare],
-        err => {
-          if (err) return rej(false);
-          acc(true);
-        },
-          res.status(200).json({
-            userId: username._id,
-            token: jwt.sign(
-              { userId: username._id },
-              'RANDOM_TOKEN_SECRET',
-              { expiresIn: '24h' }
-            )
-          })
-      )
+        "SELECT password,id FROM users WHERE username = ?",
+        [username],
+        async (err, result) => {
+          if (err) reject(err);
+          if (result.length < 1) {
+           accept({
+             statusCode: 404,
+             msg: "Utilisateur non trouvé !",
+             success: false
+           });
+          }
+          const userIdFromMySQL = result[0].id;
+          const hashFromMySQL = result[0].password;
+          // on veut comparer le hash depuis la requête avec celui obtenu depuis la base de données
+          try {
+            const hashComparison = await bcrypt.compare(password, hashFromMySQL);
+            // TODO dans le frontend, feedback à l'utilisateur si mauvais mot de passe
+            if (!hashComparison) {
+              accept({
+                statusCode: 401,
+                msg: "Mot de passe incorrect !",
+                success: false
+              });
+            } else {
+              accept({
+                statusCode: 200,
+                msg: {
+                  userId: userIdFromMySQL,
+                  token: jwt.sign(
+                    { userId: userIdFromMySQL },
+                    // TODO token secret from env
+                    process.env.TOKEN,
+                    { expiresIn: '24h' }
+                  )
+                },
+                success: true
+              });
+            }
+          } catch (err) {
+            console.error(err);
+            reject(err);
+          }
+        }
+      );
     });
-    mySQLQueryFind.then(result => res.status(201).json({message: 'Utilisateur connecté'}))
-      .catch(err => {
-        console.error("prob with mysql");
-        res.status(500).json({ message: errorMessage500 });
-      });
+    mySQLQuery2.then(result => res.status(result.statusCode).json({message: result.msg, success: result.success}))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ message: errorMessage500 });
+    });
   } catch (error) {
     console.error("prob with bcrypt");
     console.error(error);
     res.status(500).json({message:errorMessage500, success: false});
-  }
+  } 
+  
 };
      
-      
-
-
-  // if (process.env.USED_DATABASE === "MongoDB") {
-  //   MongoUser.findOne({ email: req.body.email })
-  //   .then(user => {
-  //     if (!user) {
-  //       return res.status(401).json({ error: 'Utilisateur non trouvé !' });
-  //     }
-  //     bcrypt.compare(req.body.password, user.password)
-  //       .then(valid => {
-  //         if (!valid) {
-  //           return res.status(401).json({ error: 'Mot de passe incorrect !' });
-  //         }
-  //         res.status(200).json({
-  //           userId: user._id,
-  //           token: jwt.sign(
-  //             { userId: user._id },
-  //             'RANDOM_TOKEN_SECRET',
-  //             { expiresIn: '24h' }
-  //           )
-  //         });
-  //       })
-  //       .catch(error => res.status(500).json({ error }));
-  //   })
-  //   .catch(error => res.status(500).json({ error }));
-// DELETE
+// TODO delete user
 
 module.exports = {
   signup,

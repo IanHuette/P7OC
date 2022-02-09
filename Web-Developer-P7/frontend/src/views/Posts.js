@@ -13,12 +13,16 @@ const Posts = () => {
 
   let navigate = useNavigate();
 
+  // const onSubmit = e => {
+    
+  // }
+
   useEffect(async () => {
 
     if(!userIsLoggedIn) {
       navigate("/login");
     }
-
+  
     const apiResponse = await axios("http://localhost:8080/api/posts");
     const postsFromApi = apiResponse.data;
 
@@ -35,10 +39,13 @@ const Posts = () => {
     setPosts(postsFromApi);
   }, []);
 
+
+
+
   const posttitle = 'Publications récentes';
   return (
     <div className="post-size">
-      <form className='form' method="post">
+      <form /*</div>onSubmit={onSubmit}*/ className='form' method="post">
           <input type="text" className="input" placeholder="Quoi de Neuf ?"></input>
           <button className='button-post'>Publier</button>
       </form>
