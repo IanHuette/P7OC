@@ -4,39 +4,39 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from "axios";
 import AuthContext from "../contexts/auth/AuthContext";
 import {useNavigate} from "react-router-dom";
+import checkAuth from '../helpers/check-auth';
 
 const Posts = () => {
 
   const [posts, setPosts] = useState([]);
   const authContext = useContext(AuthContext);
-  const {userIsLoggedIn} = authContext;
+  const {userIsLoggedIn, logUserIn, userData} = authContext;
 
-  let navigate = useNavigate();
-
-  // const onSubmit = e => {
-    
-  // }
+  const navigate = useNavigate();
 
   useEffect(async () => {
 
-    if(!userIsLoggedIn) {
+    const userObj = await checkAuth(userIsLoggedIn);
+
+    if (userObj.userIsLoggedIn) {
+      const apiResponse = await axios("http://localhost:8080/api/posts");
+      const postsFromApi = apiResponse.data;
+      postsFromApi.sort((a, b) => {
+        const splittedDateA = a.created_at.split("T");
+        const splittedDateB = b.created_at.split("T");
+        const formattedDateFromMySQLA = splittedDateA[0] + ' ' + splittedDateA[1].split(".000Z")[0];
+        const formattedDateFromMySQLB = splittedDateB[0] + ' ' + splittedDateB[1].split(".000Z")[0];
+        let c = new Date(formattedDateFromMySQLA);
+        let d = new Date(formattedDateFromMySQLB);
+        return d-c;
+      });
+      logUserIn(userObj);
+      setPosts(postsFromApi);
+    } else {
+      console.log(userObj);
       navigate("/login");
     }
-  
-    const apiResponse = await axios("http://localhost:8080/api/posts");
-    const postsFromApi = apiResponse.data;
 
-    postsFromApi.sort((a, b) => {
-      const splittedDateA = a.created_at.split("T");
-      const splittedDateB = b.created_at.split("T");
-      const formattedDateFromMySQLA = splittedDateA[0] + ' ' + splittedDateA[1].split(".000Z")[0];
-      const formattedDateFromMySQLB = splittedDateB[0] + ' ' + splittedDateB[1].split(".000Z")[0];
-      let c = new Date(formattedDateFromMySQLA);
-      let d = new Date(formattedDateFromMySQLB);
-      return d-c;
-    });
-
-    setPosts(postsFromApi);
   }, []);
 
 

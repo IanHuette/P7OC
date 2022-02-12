@@ -12,20 +12,23 @@ import {
 const AuthState = props => {
 
     const initialState = {
-        userIsLoggedIn: false
+        userIsLoggedIn: false,
+        userData: null
     };
 
     const [state, dispatch] = useReducer(AuthReducer, initialState);
 
     // SO actions
-    const logUserIn = (msg) => {
-        dispatch({type: USER_LOGGED_IN, payload:msg});
+    const logUserIn = (userData) => {
+        console.log("FROM STATE");
+        dispatch({type: USER_LOGGED_IN, payload:userData});
     };
     // EO actions
 
     return <AuthContext.Provider
         value={{
             userIsLoggedIn: state.userIsLoggedIn,
+            userData: state.userData,
             // actions
             logUserIn
         }}

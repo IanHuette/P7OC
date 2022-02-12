@@ -1,25 +1,18 @@
 const jwt = require('jsonwebtoken');
 
-// module.exports = (req, res, next) => {
-//   // Récupération du token dans les paramètres
-//   const authHeader = req.headers.authorization;
-  
-//   console.log(authHeader);
-//   // Si l'utilisateur possède une autorisation,
-//   // on déclare le token et on le vérifie, s'il n'y a pas
-//   // d'erreur, on le next, sinon on renvoie un statut 403
-//   if (authHeader) {
-//       const token = authHeader.split(' ')[1];
-
-//       jwt.verify(token, process.env.TOKEN, (err, user) => {
-//           if (err) {
-//               return res.status(403);
-//           }
-//           next();
-//       });
-//   }
-//   // Sinon, on renvoie le statut 401 Unauthorized
-//   else {
-//       res.status(401).json({error:"accès non authorisé"});
-//   }
-// };
+module.exports = (req, res, next) => { // vérifie si le token envoyé est valable et si l'user id correspond bien
+  try {
+    const token = req.headers.authorization.split(' ')[1]; // extrait le token du header authorization / split pour récupérer tout après l'espace dans le header
+    const decodedToken = jwt.verify(token, process.env.TOKEN);  // fonction verify pour décoder le token (si il n'est pas valide une erreur sera génégée)
+    const userId = decodedToken.userId; // extrait de l'userID du token
+    if (req.body.userId && req.body.userId !== userId) { // si la demande contient un ID utilisateur, nous le comparons à celui extrait du token. S'ils sont différents, nous générons une erreur ;
+      throw 'Invalid user ID';
+    } else {
+      next();
+    }
+  } catch {
+    res.status(401).json({
+      error: new Error('Invalid request!')
+    });
+  }
+};

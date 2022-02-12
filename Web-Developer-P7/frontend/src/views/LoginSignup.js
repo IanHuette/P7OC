@@ -69,13 +69,10 @@ const LoginSignup = () => {
                 alert("Combinaison nom d'utilisateur / mot de passe incorrect")
                 return
             }
-            console.log('CBON')
-            sessionStorage.setItem('username', JSON.stringify(username))
-            // localStorage.setItem('token', JSON.stringify(apiResult.data.token)) // essaie d'extraire le token
-            alert(`Connexion réussie ! bienvenue ${username}`)
-            logUserIn(true);
+            localStorage.setItem('userData', JSON.stringify(apiResult.data.message));
+            logUserIn(apiResult.data.message);
+            alert(`Connexion réussie ! bienvenue ${username}`);
             navigate("/");
-            
         } 
     };
 
