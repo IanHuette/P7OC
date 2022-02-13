@@ -11,7 +11,6 @@ const Posts = () => {
   const [posts, setPosts] = useState([]);
   const authContext = useContext(AuthContext);
   const {userIsLoggedIn, logUserIn, userData} = authContext;
-
   const navigate = useNavigate();
 
   useEffect(async () => {
@@ -33,7 +32,6 @@ const Posts = () => {
       logUserIn(userObj);
       setPosts(postsFromApi);
     } else {
-      console.log(userObj);
       navigate("/login");
     }
 

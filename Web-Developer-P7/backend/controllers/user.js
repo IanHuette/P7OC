@@ -35,7 +35,7 @@ const signup = async (req, res, next) => {
   }
 };
 
-const constructAuthResponse = (authed, userId) => {
+const constructAuthResponse = (authed, userId, username) => {
   let authResponse = {
     statusCode: 401,
     message: "Mot de passe incorrect !",
@@ -46,6 +46,7 @@ const constructAuthResponse = (authed, userId) => {
       statusCode: 200,
       message: {
         userId: userId,
+        username: username,
         token: jwt.sign(
           { userId: userId },
           // TODO token secret from env
@@ -82,7 +83,7 @@ const login = async (req, res, next) => {
           // on veut comparer le hash depuis la requête avec celui obtenu depuis la base de données
           try {
             const hashComparison = await bcrypt.compare(password, hashFromMySQL);
-            accept(constructAuthResponse(hashComparison, userIdFromMySQL));
+            accept(constructAuthResponse(hashComparison, userIdFromMySQL, username));
           } catch (err) {
             console.error(err);
             reject(err);
@@ -90,7 +91,9 @@ const login = async (req, res, next) => {
         }
       );
     });
-    loginMySQLQuery.then(result => res.status(result.statusCode).json({message: result.msg, success: result.success}))
+    loginMySQLQuery.then(result => {
+      res.status(result.statusCode).json({message: result.message, success: result.success});
+    })
     .catch(err => {
       console.error(err);
       res.status(500).json({ message: errorMessage500 });
@@ -104,18 +107,19 @@ const login = async (req, res, next) => {
 };
 
 const deleteOne = (req, res, next) => {
-
   const userId = req.params.id;
+  console.log(req.params.id);
+  // TODO verify JWT here
   try {
     con.query(
-      "DELETE FROM users WHERE id = ?",
+      "DELETE FROM users WHERE username = ?",
       [userId],
     )
   } catch (error) {
     console.log(error)
-    return
+    res.status(401).json({message:"UNAUTHORIZED", success: false});
   }
-  res.status(200).json("DESACTIVATE");
+  res.status(200).json({message:"ACCOUNT DELETED", success: true});
 }
    
 const checkAuth = (req, res, response) => {

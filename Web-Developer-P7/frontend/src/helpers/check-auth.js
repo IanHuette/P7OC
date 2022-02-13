@@ -18,10 +18,10 @@ const checkAuth = async (userLoggedIn) => {
         userIsLoggedIn: false
     };
 
-    if(!userLoggedIn) {
+    if(!userLoggedIn && userObj.userData && userObj.userData.userId != null) {
         // TODO react env var for localhost
         try {
-            const APIResponse = axios.get("http://localhost:8080/api/auth/check/?userId="+userObj.userData.userId, {
+            const APIResponse = await axios.get("http://localhost:8080/api/auth/check/?userId="+userObj.userData.userId, {
                 headers: {
                     'Authorization': 'Bearer ' + userObj.userData.token
                 }
@@ -41,7 +41,7 @@ const checkAuth = async (userLoggedIn) => {
         };
         localStorage.removeItem("userData");
     }
-
+        console.log('test');
     return userObj;
 };
 

@@ -1,11 +1,10 @@
-import React, {Fragment, useState, useRef, useContext} from 'react';
+import React, {Fragment, useState, useRef, useContext, useEffect} from 'react';
 import "./../styles/views/LoginSignup.css";
 import { Link, useLocation } from "react-router-dom";
 import AuthContext from '../contexts/auth/AuthContext';
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-
-
+import checkAuth from "../helpers/check-auth";
 
 const LoginSignup = () => {
 
@@ -17,9 +16,19 @@ const LoginSignup = () => {
     const submitType = useRef('');
 
     const authContext = useContext(AuthContext);
-    const {logUserIn} = authContext;
+    const {logUserIn, userIsLoggedIn, userData} = authContext;
 
     let navigate = useNavigate();
+
+    useEffect(async() => {
+        const userDataChecked = await checkAuth(userIsLoggedIn);
+        console.log('test');
+        console.log(userDataChecked);
+        if (userDataChecked.userIsLoggedIn) {
+          logUserIn(userDataChecked);
+          navigate("/");
+        } 
+      }, []); 
 
     const onUsernameChange = e => {
         setUsername(e.target.value);
@@ -48,7 +57,7 @@ const LoginSignup = () => {
                     email: email,
                 });
                 alert("Compte crée avec succès, vous pouvez vous connectez")
-                window.location.assign("/login")
+                navigate("/login");
             } catch (error) {
                 console.log(error)
                 alert("Nom d'utilisateur ou email déjà utilisé")
@@ -61,18 +70,16 @@ const LoginSignup = () => {
             try {
                 apiResult = await axios.post("http://localhost:8080/api/auth/login", {
                     username: username,
-                    password: password,
+                    password: password
                 });
-                
+                localStorage.setItem('userData', JSON.stringify(apiResult.data.message));
+                alert(`Connexion réussie ! bienvenue ${username}`);
+                navigate("/");
             } catch (error) {
                 console.log(error)
                 alert("Combinaison nom d'utilisateur / mot de passe incorrect")
-                return
+                return;
             }
-            localStorage.setItem('userData', JSON.stringify(apiResult.data.message));
-            logUserIn(apiResult.data.message);
-            alert(`Connexion réussie ! bienvenue ${username}`);
-            navigate("/");
         } 
     };
 

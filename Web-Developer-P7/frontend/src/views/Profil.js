@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 const Profil = () => {
 
   const authContext = useContext(AuthContext);
-  const {userIsLoggedIn, logUserIn} = authContext;
+  const {userIsLoggedIn, logUserIn, userData} = authContext;
+
 
   const navigate = useNavigate();
 
@@ -20,13 +21,18 @@ const Profil = () => {
       navigate("/login");
     }
   }, []); 
-  
-  const onSubmit = () => {
-    const userId = JSON.parse(localStorage.getItem("userData")).message.userId;
-    console.log(userId);
-    axios.post(`http://localhost:8080/api/auth/profil/${userId}`);
-    // if (!window.confirm(`Voulez-vous vraiment désactiver le compte ?`)) return;
-      // localStorage.clear();
+
+  const onSubmit = async () => {
+    if (!window.confirm(`Voulez-vous vraiment supprimer le compte ?`)) return;
+    const userId = localStorage.getItem('userData');
+    axios.delete(`http://localhost:8080/api/auth/profil/${userId}`, {
+      headers: {
+          'Authorization': 'Bearer ' + userData.token
+      }
+    });
+    // localStorage.clear();
+    // navigate("/signup");
+
   }
 
   return (
