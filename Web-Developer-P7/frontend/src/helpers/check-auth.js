@@ -6,11 +6,11 @@
 
 import axios from "axios";
 
-const checkAuth = async (userLoggedIn) => {
+const checkAuth = (userLoggedIn) => {
 
     const storedUserData = localStorage.getItem("userData");
     const userDataParsed = JSON.parse(storedUserData) != null ? JSON.parse(storedUserData): null;
-    let userObj = userDataParsed != null && userDataParsed.token && userDataParsed.userId ? {
+    let userObj = userDataParsed != null && userDataParsed.token && userDataParsed.userId && userDataParsed.username ? {
         userData: userDataParsed,
         userIsLoggedIn: true
     }: {
@@ -18,10 +18,10 @@ const checkAuth = async (userLoggedIn) => {
         userIsLoggedIn: false
     };
 
-    if(!userLoggedIn && userObj.userData && userObj.userData.userId != null) {
+    if(!userLoggedIn && userObj.userData && userObj.userData.userId && userObj.userData.username != null) {
         // TODO react env var for localhost
         try {
-            const APIResponse = await axios.get("http://localhost:8080/api/auth/check/?userId="+userObj.userData.userId, {
+            const APIResponse = axios.get("http://localhost:8080/api/auth/check/?userId="+userObj.userData.userId+"&username="+userObj.userData.username, {
                 headers: {
                     'Authorization': 'Bearer ' + userObj.userData.token
                 }
@@ -41,7 +41,6 @@ const checkAuth = async (userLoggedIn) => {
         };
         localStorage.removeItem("userData");
     }
-        console.log('test');
     return userObj;
 };
 

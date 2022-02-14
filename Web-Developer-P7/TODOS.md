@@ -6,14 +6,14 @@
 4. 1. connexion à un compte ✅ 2) notification de succès à l'utilisateur ✅ 3) redirection vers les posts ✅
 5. notifications d'échec pour le signup et login ✅
 6. suppression d'un compte (ajouter une route qui redirige vers une page "profil" pour supprimer le user) ✅
-    - s'assurer qu'un utilisateur ne peut pas supprimer le compte d'un autre utilisateur ❌
-7. quand je suis connecté à l'application, je ne peux pas accéder à LoginSignup ❌
+   - s'assurer qu'un utilisateur ne peut pas supprimer le compte d'un autre utilisateur ❌
+7. quand je suis connecté à l'application, je ne peux pas accéder à LoginSignup ✅
 8. mettre en place un système de personalisation des users (bonjour 'username') ⏱
 9. logout
 10. publication d'un post ⏱
     - s'assurer qu'un post a l'id de l'utilisateur qui l'a posté
 11. associer une image à un post
-12. 1) valider formulaires de signup et login côté front 2) valider formulaires signup et login côté back
+12. 1. valider formulaires de signup et login côté front 2) valider formulaires signup et login côté back
 
 ## FONCTIONNALITES BONUS
 

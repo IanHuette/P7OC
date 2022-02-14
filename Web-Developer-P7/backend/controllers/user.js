@@ -107,31 +107,62 @@ const login = async (req, res, next) => {
 };
 
 const deleteOne = (req, res, next) => {
-  const userId = req.params.id;
-  console.log(req.params.id);
+
   // TODO verify JWT here
+  const token = req.headers.authorization.split(' ')[1];
+  const decryptedToken = jwt.verify(token, process.env.TOKEN);
+  const userId = decryptedToken.userId;
+  
   try {
-    con.query(
-      "DELETE FROM users WHERE username = ?",
-      [userId],
-    )
+
+    // TODO use a promise here
+    const deleteMySQLQuery = new Promise( (accept, reject) => {
+      con.query(
+        "DELETE FROM users WHERE id = ?",
+        [userId],
+        async (err, result) => {
+          if (err) reject(err);
+          if (result.length < 1) {
+           accept({
+             statusCode: 404,
+             message: "Utilisateur inexistant !",
+             success: false
+           });
+          }
+        }
+      );
+    });
+    deleteMySQLQuery.then(result => {
+      res.status(result.statusCode).json({message: result.message, success: result.success});
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ message: errorMessage500 });
+    })
   } catch (error) {
     console.log(error)
     res.status(401).json({message:"UNAUTHORIZED", success: false});
   }
   res.status(200).json({message:"ACCOUNT DELETED", success: true});
 }
-   
+
 const checkAuth = (req, res, response) => {
   // 1- ✅ extraire le token 
   // 2- ✅ verifier le couple token + userId
   // 3- ✅ gestion succès + err  (ne pas oublier de renvoyer la réponse appropriée dans les deux cas)
   const token = req.headers.authorization.split(' ')[1];
   const userId = req.query.userId;
-  const decodedToken = jwt.verify(token, process.env.TOKEN);
-  constructAuthResponse(decodedToken, userId);
+  const username = req.query.username
+  try {
+    const decodedToken = jwt.verify(token, process.env.TOKEN);
+    constructAuthResponse(decodedToken, userId, username);
+  } catch (error) {
+    constructAuthResponse(false);
+  }
 }
 
+
+   
 module.exports = {
   signup,
   login,

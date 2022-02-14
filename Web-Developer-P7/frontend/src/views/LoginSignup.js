@@ -22,8 +22,6 @@ const LoginSignup = () => {
 
     useEffect(async() => {
         const userDataChecked = await checkAuth(userIsLoggedIn);
-        console.log('test');
-        console.log(userDataChecked);
         if (userDataChecked.userIsLoggedIn) {
           logUserIn(userDataChecked);
           navigate("/");

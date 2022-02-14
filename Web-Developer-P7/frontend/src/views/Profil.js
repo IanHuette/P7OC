@@ -24,15 +24,21 @@ const Profil = () => {
 
   const onSubmit = async () => {
     if (!window.confirm(`Voulez-vous vraiment supprimer le compte ?`)) return;
-    const userId = localStorage.getItem('userData');
-    axios.delete(`http://localhost:8080/api/auth/profil/${userId}`, {
+    // TODO we repeat ourselves a lot with this => create a function
+    const userDataFromLocalStorage = localStorage.getItem('userData');
+    const userDataParsed = JSON.parse(userDataFromLocalStorage);
+
+    const APIResponse = await axios.delete(`http://localhost:8080/api/auth/profil/${userDataParsed.userId}`, {
       headers: {
-          'Authorization': 'Bearer ' + userData.token
+          'Authorization': 'Bearer ' + userDataParsed.token
       }
     });
-    // localStorage.clear();
-    // navigate("/signup");
-
+    
+    localStorage.clear();
+    if (!APIResponse.data.success) {
+      // TODO CONDITIONS D ECHEC => NOTIFIER L UTILISATEUR
+    } 
+    navigate("/signup");
   }
 
   return (
