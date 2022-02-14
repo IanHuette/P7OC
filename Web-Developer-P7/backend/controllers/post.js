@@ -26,34 +26,59 @@ const getAllPosts = (req, res, next) => {
  * CRÉER UN POST
  */
 const createPost = (req, res, next) => {
-  if (process.env.USED_DATABASE === "MongoDB") {
-    const postObject = JSON.parse(req.body.post);
-    delete postObject._id;
-    const post = new Post({
-        ...postObject,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        likes: 0,
-        dislikes: 0
-    });
-    post.save()
-        .then(() => res.status(201).json({ message: 'Post enregistrée !'}))
-        .catch(error => {
-            console.log(json({ error }));
-            res.status(400).json({ error });
-        });
-  }
-  else if (process.env.USED_DATABASE === "MySQL"){
+  console.log('je suis la')
+    const content = req.body.content;
+    const user_id = req.body.user_id;
 
-    con.connect(function(err) {
-      if (err) {
-        res.status(500).json({ message: "something wrong, please try again later" });
-      }
-      con.query(`INSERT INTO posts SET ?`, function (err, result, fields){
-        if (err) res.status(500).json({ message: "something wrong, please try again later" });
-        res.status(200).json(result);
-      })
-    })
+  try {
+    const createMySQLQuery = new Promise( (accept, reject) => {
+      con.query(`INSERT INTO posts (content, user_id) VALUES (?, ?)`,
+      [content, user_id],
+        err => {
+          if (err) return reject(false);
+          accept(true);
+        },
+      )
+    });
+    createMySQLQuery.then(result => res.status(201).json({message: 'Post crée !', success: true}))
+  } catch (err) {
+    console.error(err);
+    reject(err);
   }
+
+
+
+  // if (process.env.USED_DATABASE === "MongoDB") {
+  //   const postObject = JSON.parse(req.body.post);
+  //   delete postObject._id;
+  //   const post = new Post({
+  //       ...postObject,
+  //       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+  //       likes: 0,
+  //       dislikes: 0
+  //   });
+  //   post.save()
+  //       .then(() => res.status(201).json({ message: 'Post enregistrée !'}))
+  //       .catch(error => {
+  //           console.log(json({ error }));
+  //           res.status(400).json({ error });
+  //       });
+  // }
+  // else if (process.env.USED_DATABASE === "MySQL"){
+    // récupérer l'user id et le content
+    // const userId = req.params.userId
+    // console.log(userId)
+    // con.connect(function(err) {
+    //   if (err) {
+    //     res.status(500).json({ message: "something wrong, please try again later" });
+    //   }
+    //   con.query(`INSERT INTO posts (content, user_id) VALUES (?, ?)`, function (err, result, fields){
+    //     if (err) res.status(500).json({ message: "something wrong, please try again later" });
+    //     res.status(200).json(result);
+    //   })
+    // })
+  // }
+
 };
 
 

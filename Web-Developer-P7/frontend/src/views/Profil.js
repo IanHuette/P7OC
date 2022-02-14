@@ -36,15 +36,28 @@ const Profil = () => {
     
     localStorage.clear();
     if (!APIResponse.data.success) {
-      // TODO CONDITIONS D ECHEC => NOTIFIER L UTILISATEUR
+      alert("Compte non existant")
     } 
     navigate("/signup");
   }
+  const onSubmitLogout = async () => {
+    if (!window.confirm(`Vous allez être déconnecté`)) return;
+    localStorage.clear();
+    navigate("/login");
+  }
 
   return (
-    <form  onSubmit={onSubmit}>
-      <button>Supprimer le compte</button>
-    </form>
+    <div>
+      <form onSubmit={onSubmit}>
+        <button>Supprimer le compte</button>
+      </form>
+      <form onSubmit={onSubmitLogout}>
+        <button>Se déconnecter</button>
+      </form>
+    </div>
+
+
+
   )
 }
 

@@ -10,7 +10,7 @@ const postCtrl = require('../controllers/post');
 // router.get('/', auth, postCtrl.getAllPosts);
 router.get('/', postCtrl.getAllPosts);
 // router.post('/', auth, multer, postCtrl.createPost);
-router.post('/', postCtrl.createPost);
+router.post('/create', postCtrl.createPost);
 
 // SECONDARY
 // TODO use multer to upload image if any time left
