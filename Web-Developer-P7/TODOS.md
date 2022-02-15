@@ -13,7 +13,7 @@
 10. publication d'un post ✅
     - s'assurer qu'un post a l'id de l'utilisateur qui l'a posté ✅
 11. mise à jour et supression de posts par un utilisateur
-12. comments + clean up dead code
+12. comments + clean up dead code ✅
 13. amélioration du style de l'app'
 
 ---

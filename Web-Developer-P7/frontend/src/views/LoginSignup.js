@@ -20,6 +20,9 @@ const LoginSignup = () => {
 
     let navigate = useNavigate();
 
+/**
+ * VÉRIFICATION SI L'USER EST BIEN CONNECTÉ SINON RENVOYÉ À LA PAGE DE CONNEXION
+ */
     useEffect(async() => {
         const userDataChecked = await checkAuth(userIsLoggedIn);
         if (userDataChecked.userIsLoggedIn) {
@@ -40,7 +43,9 @@ const LoginSignup = () => {
         setEmail(e.target.value);
     };
 
-
+/**
+ * LOGIQUE DE CONNEXION ET D'ENREGISTREMENT D'UN COMPTE
+ */
     const onSubmit = async e => {
 
         e.preventDefault();

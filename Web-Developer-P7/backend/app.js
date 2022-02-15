@@ -5,7 +5,6 @@ const con = require("./database");
 
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
-const { getAllPosts } = require('./controllers/post');
 
 con.connect(function(err) {
   if (err) {

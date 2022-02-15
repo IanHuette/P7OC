@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React from "react";
 import Banner from './components/Banner';
 import Posts from './views/Posts';
 import LoginSignup from './views/LoginSignup';

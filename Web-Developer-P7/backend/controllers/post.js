@@ -1,11 +1,4 @@
-const Post = require('../sqlmodels/post');
-const fs = require('fs');
-
 const con = require('../database');
-
-const User = require("../sqlmodels/user");
-
-// TODO remove dead code
 
 /**
  * AFFICHER TOUTES LES POSTS
@@ -20,13 +13,26 @@ const getAllPosts = (req, res, next) => {
       res.status(200).json(result);
     });
   });
-  };
+};
 
+/**
+ * AFFICHER UN POST
+ */
+const getOnePost = (req, res, next) => {
+  con.connect(function(err) {
+    if (err) {
+      res.status(500).json({ message: "something wrong, please try again later" });
+    }
+    con.query("SELECT id FROM posts", function (err, result, fields) {
+      if (err) res.status(500).json({ message: "something wrong, please try again later" });
+      res.status(200).json(result);
+    });
+  });
+};
 /**
  * CRÉER UN POST
  */
 const createPost = (req, res, next) => {
-  console.log('je suis la')
     const content = req.body.content;
     const user_id = req.body.user_id;
 
@@ -45,44 +51,51 @@ const createPost = (req, res, next) => {
     console.error(err);
     reject(err);
   }
-
-
-
-  // if (process.env.USED_DATABASE === "MongoDB") {
-  //   const postObject = JSON.parse(req.body.post);
-  //   delete postObject._id;
-  //   const post = new Post({
-  //       ...postObject,
-  //       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-  //       likes: 0,
-  //       dislikes: 0
-  //   });
-  //   post.save()
-  //       .then(() => res.status(201).json({ message: 'Post enregistrée !'}))
-  //       .catch(error => {
-  //           console.log(json({ error }));
-  //           res.status(400).json({ error });
-  //       });
-  // }
-  // else if (process.env.USED_DATABASE === "MySQL"){
-    // récupérer l'user id et le content
-    // const userId = req.params.userId
-    // console.log(userId)
-    // con.connect(function(err) {
-    //   if (err) {
-    //     res.status(500).json({ message: "something wrong, please try again later" });
-    //   }
-    //   con.query(`INSERT INTO posts (content, user_id) VALUES (?, ?)`, function (err, result, fields){
-    //     if (err) res.status(500).json({ message: "something wrong, please try again later" });
-    //     res.status(200).json(result);
-    //   })
-    // })
-  // }
-
 };
 
+/**
+ * SUPPRIMER UN POST
+ */
+const deletePost = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decryptedToken = jwt.verify(token, process.env.TOKEN);
+  const userId = decryptedToken.userId;
+  const postId = '' // récupérer le post Id
+
+  try {
+    const deleteMySQLQuery = new Promise( (accept, reject) => {
+      con.query(
+        "DELETE FROM posts WHERE (id, user_id) = (?,?)",
+        [postId, userId],
+        async (err, result) => {
+          if (err) reject(err);
+          if (result.length < 1) {
+           accept({
+             statusCode: 404,
+             message: "Post inexistant !",
+             success: false
+           });
+          }
+        }
+      );
+    });
+    deleteMySQLQuery.then(result => {
+      res.status(result.statusCode).json({message: result.message, success: result.success});
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ message: errorMessage500 });
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(401).json({message:"UNAUTHORIZED", success: false});
+  }
+  res.status(200).json({message:"POST DELETED", success: true});
+}
 
 module.exports = {
     getAllPosts,
-    createPost
+    getOnePost,
+    createPost,
+    deletePost
 };

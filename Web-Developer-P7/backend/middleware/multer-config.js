@@ -1,3 +1,5 @@
+// gardé car futur usage pour l'upload des images associées au post
+
 const multer = require('multer');
 
 const MIME_TYPES = {

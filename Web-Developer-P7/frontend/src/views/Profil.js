@@ -8,11 +8,14 @@ import { useNavigate } from 'react-router-dom';
 const Profil = () => {
 
   const authContext = useContext(AuthContext);
-  const {userIsLoggedIn, logUserIn, userData} = authContext;
+const {userIsLoggedIn, logUserIn, userData} = authContext;
 
 
   const navigate = useNavigate();
 
+  /**
+ * VÉRIFICATION SI L'USER EST BIEN CONNECTÉ SINON RENVOYÉ À LA PAGE DE CONNEXION
+ */
   useEffect(async() => {
     const userData = await checkAuth(userIsLoggedIn);
     if (userData.userIsLoggedIn) {
@@ -22,9 +25,11 @@ const Profil = () => {
     }
   }, []); 
 
+  /**
+ * SUPPRESSION D'UN COMPTE 
+ */
   const onSubmit = async () => {
     if (!window.confirm(`Voulez-vous vraiment supprimer le compte ?`)) return;
-    // TODO we repeat ourselves a lot with this => create a function
     const userDataFromLocalStorage = localStorage.getItem('userData');
     const userDataParsed = JSON.parse(userDataFromLocalStorage);
 
@@ -40,6 +45,10 @@ const Profil = () => {
     } 
     navigate("/signup");
   }
+
+  /**
+ * DÉCONNECTION D'UN COMPTE
+ */
   const onSubmitLogout = async () => {
     if (!window.confirm(`Vous allez être déconnecté`)) return;
     localStorage.clear();

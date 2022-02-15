@@ -1,13 +1,12 @@
-const MongoUser = require('../mongomodels/user');
-const User = require('../sqlmodels/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const con = require("../database");
-const user = require('../mongomodels/user');
 
 const errorMessage500 = "Désolé, nous avons rencontré un problème veuillez réessayer plus tard !";
 
-// CREATE
+/**
+ * ENREGISTREMENT D'UN COMPTE
+ */
 const signup = async (req, res, next) => {
   const {username, email, password} = req.body;
   // récupérer le hash du password qu'envoie l'utilisateur
@@ -49,7 +48,6 @@ const constructAuthResponse = (authed, userId, username) => {
         username: username,
         token: jwt.sign(
           { userId: userId },
-          // TODO token secret from env
           process.env.TOKEN,
           { expiresIn: '24h' }
         )
@@ -60,8 +58,10 @@ const constructAuthResponse = (authed, userId, username) => {
   return authResponse;
 }
 
+/**
+ * CONNEXION D'UN COMPTE
+ */
 const login = async (req, res, next) => {
-    // 1- récupérer le password envoyé par le user dans la requête
   const username = req.body.username;
   const password = req.body.password;
   try {
@@ -105,16 +105,15 @@ const login = async (req, res, next) => {
   } 
 };
 
+/**
+ * SUPPRESSION D'UN COMPTE
+ */
 const deleteOne = (req, res, next) => {
-
-  // TODO verify JWT here
   const token = req.headers.authorization.split(' ')[1];
   const decryptedToken = jwt.verify(token, process.env.TOKEN);
   const userId = decryptedToken.userId;
   
   try {
-
-    // TODO use a promise here
     const deleteMySQLQuery = new Promise( (accept, reject) => {
       con.query(
         "DELETE FROM users WHERE id = ?",
@@ -145,6 +144,9 @@ const deleteOne = (req, res, next) => {
   res.status(200).json({message:"ACCOUNT DELETED", success: true});
 }
 
+/**
+ * VERIFICATION SI LE USER EST BIEN LA BONNE PERSONNE
+ */
 const checkAuth = (req, res, response) => {
   // 1- ✅ extraire le token 
   // 2- ✅ verifier le couple token + userId

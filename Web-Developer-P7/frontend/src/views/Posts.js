@@ -34,6 +34,9 @@ const Posts = () => {
   const {userIsLoggedIn, logUserIn, userData} = authContext;
   const navigate = useNavigate();
 
+/**
+ * VÉRIFICATION SI L'USER EST BIEN CONNECTÉ, SI IL EST CONNECTÉ RENVOI LES POSTS SINON RENVOI À LA PAGE DE CONNEXION
+ */
   useEffect(async () => {
     const userObj = await checkAuth(userIsLoggedIn);
     if (userObj.userIsLoggedIn) {
@@ -50,15 +53,15 @@ const Posts = () => {
     setContent(e.target.value)
   }
 
+  /**
+ * LOGIQUE DE CRÉATION D'UN POST 
+ */
   const onSubmitPost = async e => {
     e.preventDefault();
     let apiResult;
     try {
-      // TODO make sure we get the user id
       const user_id = userData.userData.userId;
-      // TODO send post request with content / user_id (cf. LoginSignup)
       if(content === ''){
-        //error + return
         console.log('Merci d\'écrire un message')
         alert("Message vide")
         return
@@ -67,7 +70,6 @@ const Posts = () => {
           content : content,
           user_id : user_id,
         });
-        // TODO make sure latest post appears on top of the list
         alert("Message posté");
         let fetchedPosts = await getPosts();
         fetchedPosts = sortPostsByDate(fetchedPosts);
@@ -75,7 +77,6 @@ const Posts = () => {
       } }
       catch (error) {
         console.log(error);
-        // TODO feedback to user in case failure
         alert("Veuillez réessayer")
         return
       } 
@@ -92,11 +93,13 @@ const Posts = () => {
       <h2 className="h2position">{posttitle}</h2>
       <ul>
         {posts.map((post, index) => (
-          <Post key={`${post}-${index}`} content={post.content}/>
+          // passage de propriétés à un composant enfant
+          <Post key={`${post}-${index}`} content={post.content} id={post.id} userData={userData}/>
         ))}
       </ul>
     </div>
   );
+
 
 };
 
