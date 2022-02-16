@@ -1,5 +1,6 @@
 const con = require('../database');
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 /**
  * AFFICHER TOUTES LES POSTS
  */
@@ -18,17 +19,17 @@ const getAllPosts = (req, res, next) => {
 /**
  * AFFICHER UN POST
  */
-const getOnePost = (req, res, next) => {
-  con.connect(function(err) {
-    if (err) {
-      res.status(500).json({ message: "something wrong, please try again later" });
-    }
-    con.query("SELECT id FROM posts", function (err, result, fields) {
-      if (err) res.status(500).json({ message: "something wrong, please try again later" });
-      res.status(200).json(result);
-    });
-  });
-};
+// const getOnePost = (req, res, next) => {
+//   con.connect(function(err) {
+//     if (err) {
+//       res.status(500).json({ message: "something wrong, please try again later" });
+//     }
+//     con.query("SELECT id FROM posts", function (err, result, fields) {
+//       if (err) res.status(500).json({ message: "something wrong, please try again later" });
+//       res.status(200).json(result);
+//     });
+//   });
+// };
 /**
  * CRÉER UN POST
  */
@@ -60,42 +61,34 @@ const deletePost = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
   const decryptedToken = jwt.verify(token, process.env.TOKEN);
   const userId = decryptedToken.userId;
-  const postId = '' // récupérer le post Id
+  const postId = req.params.id
+
 
   try {
-    const deleteMySQLQuery = new Promise( (accept, reject) => {
+    const deleteMySQLQuery = new Promise( (acc, rej) => {
       con.query(
         "DELETE FROM posts WHERE (id, user_id) = (?,?)",
         [postId, userId],
-        async (err, result) => {
-          if (err) reject(err);
-          if (result.length < 1) {
-           accept({
-             statusCode: 404,
-             message: "Post inexistant !",
-             success: false
-           });
-          }
-        }
+        err => {
+          if (err) return rej(false);
+          acc(true);
+        },
       );
     });
-    deleteMySQLQuery.then(result => {
-      res.status(result.statusCode).json({message: result.message, success: result.success});
-    })
+    deleteMySQLQuery.then(result => res.status(201).json({message: 'Post supprimé !', success: true}))
     .catch(err => {
       console.error(err);
-      res.status(500).json({ message: errorMessage500 });
+      res.status(500).json({ message: "something wrong, please try again later" });
     })
-  } catch (error) {
-    console.log(error)
-    res.status(401).json({message:"UNAUTHORIZED", success: false});
+  } catch (err) {
+    console.error(err);
   }
   res.status(200).json({message:"POST DELETED", success: true});
 }
 
 module.exports = {
     getAllPosts,
-    getOnePost,
+    // getOnePost,
     createPost,
     deletePost
 };

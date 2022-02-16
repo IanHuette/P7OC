@@ -12,18 +12,18 @@
 9. logout ✅
 10. publication d'un post ✅
     - s'assurer qu'un post a l'id de l'utilisateur qui l'a posté ✅
-11. mise à jour et supression de posts par un utilisateur
+11. mise à jour et supression de posts par un utilisateur ⏲️
+
+    - suppression faite mais problème faire message erreur quand un utilisateur essaye de delete un mauvais post et refresh la page automatiquement
+
 12. comments + clean up dead code ✅
 13. amélioration du style de l'app'
 
----
-
-14. validations
-    - valider formulaires de signup et login côté front
-    - valider formulaires signup et login côté back
-
 ## FONCTIONNALITES BONUS
 
+- validations
+  - valider formulaires de signup et login côté front
+  - valider formulaires signup et login côté back
 - associer une image à un post
 - compte admin de modérateur
 - pouvoir mettre en place un système de notification sur les nouveaux posts (5 nouveaux post depuis votre derniere visite)
