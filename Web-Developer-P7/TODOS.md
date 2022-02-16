@@ -15,12 +15,15 @@
 11. mise à jour et supression de posts par un utilisateur ✅
 12. comments + clean up dead code ✅
 13. amélioration de l'affichage + du style de l'app'
-14. réviser ces concepts de React pour être en mesure de les expliquer:
+14. réviser ces concepts de React/SQL pour être en mesure de les expliquer:
 
 - useState
 - useContext
 - useRef
 - plus généralement les react hooks
+- one-to-many / many-to-many / tables d'association
+
+15. slide de présentation
 
 ## FONCTIONNALITES BONUS
 

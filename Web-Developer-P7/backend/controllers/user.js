@@ -110,16 +110,10 @@ const login = async (req, res, next) => {
  */
 const deleteOne = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
-  let decryptedToken
-  let userId;
-  try {
-    decryptedToken = jwt.verify(token, process.env.TOKEN);
-    userId = decryptedToken.userId;
-  } catch (error) {
-    constructAuthResponse(false);
-  }
+  const decryptedToken = jwt.verify(token, process.env.TOKEN);
+  const userId = decryptedToken.userId;
   
-  if(decryptedToken) {
+  if (userId === req.params.id) {
     try {
       const deleteMySQLQuery = new Promise( (accept, reject) => {
         con.query(
@@ -148,6 +142,9 @@ const deleteOne = (req, res, next) => {
       console.log(error)
       res.status(401).json({message:"UNAUTHORIZED", success: false});
     }
+    res.status(200).json({message:"ACCOUNT DELETED", success: true});
+  } else {
+    res.status(401).json({message:"UNAUTHORIZED", success: false});
   }
 }
 

@@ -28,28 +28,36 @@ const {userIsLoggedIn, logUserIn, userData} = authContext;
   /**
  * SUPPRESSION D'UN COMPTE 
  */
-  const onSubmit = async () => {
+  const onDeleteAccount = () => {
+
     if (!window.confirm(`Voulez-vous vraiment supprimer le compte ?`)) return;
     const userDataFromLocalStorage = localStorage.getItem('userData');
     const userDataParsed = JSON.parse(userDataFromLocalStorage);
 
-    const APIResponse = await axios.delete(`http://localhost:8080/api/auth/profil/${userDataParsed.userId}`, {
+    axios.delete(`http://localhost:8080/api/auth/profil/32`, {
       headers: {
           'Authorization': 'Bearer ' + userDataParsed.token
       }
+    })
+    .then(res => {
+      if (!res.data.success) {
+        alert("Compte non existant")
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Erreur lors de la supression du compte");
+    })
+    .finally(() => {
+      localStorage.clear();
+      navigate("/signup");
     });
-    
-    localStorage.clear();
-    if (!APIResponse.data.success) {
-      alert("Compte non existant")
-    } 
-    navigate("/signup");
   }
 
   /**
  * DÉCONNECTION D'UN COMPTE
  */
-  const onSubmitLogout = async () => {
+  const onLogout = async () => {
     if (!window.confirm(`Vous allez être déconnecté`)) return;
     localStorage.clear();
     navigate("/login");
@@ -57,12 +65,8 @@ const {userIsLoggedIn, logUserIn, userData} = authContext;
 
   return (
     <div>
-      <form onSubmit={onSubmit}>
-        <button>Supprimer le compte</button>
-      </form>
-      <form onSubmit={onSubmitLogout}>
-        <button>Se déconnecter</button>
-      </form>
+      <button onClick={onDeleteAccount}>Supprimer le compte</button>
+      <button onClick={onLogout}>Se déconnecter</button>
     </div>
 
 

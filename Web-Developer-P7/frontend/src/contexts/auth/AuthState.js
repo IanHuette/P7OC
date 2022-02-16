@@ -20,7 +20,6 @@ const AuthState = props => {
 
     // SO actions
     const logUserIn = (userData) => {
-        console.log("FROM STATE");
         dispatch({type: USER_LOGGED_IN, payload:userData});
     };
     // EO actions

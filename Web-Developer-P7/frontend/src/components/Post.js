@@ -5,12 +5,10 @@ import axios from "axios";
 
 const Post = props => {
 
-  const {post, userData, removePostFromList, modifyPostFromList} = props;
-  console.log(post, userData);
+  const {post, userData, removePostFromList} = props;
 
   const [isEdit, setIsEdit] = useState(false);
   const [postContent, setPostContent] = useState(post.content);
-
 
   /**
    * SUPPRESSION D'UN POST
@@ -49,6 +47,7 @@ const Post = props => {
   const onValidateUpdate = async () => {
     if (post.user_id !== userData.userData.userId) {
       alert("Vous ne pouvez pas modifier ce post !");
+      setPostContent(post.content);
       setIsEdit(false);
     } else {
       axios.put(`http://localhost:8080/api/posts/${post.id}`, {

@@ -58,41 +58,32 @@ const createPost = (req, res, next) => {
  * SUPPRIMER UN POST
  */
 const deletePost = (req, res, next) => {
-  // TODO factorize token verification behavior
   const token = req.headers.authorization.split(' ')[1];
-  let decryptedToken = false;
-  let userId;
-  let postId;
-  try {
-    decryptedToken = jwt.verify(token, process.env.TOKEN);
-    userId = decryptedToken.userId;
-    postId = req.params.id
-  } catch (error) {
-    res.status(401).json({ message: "unauthorized" });
-  }
+  const decryptedToken = jwt.verify(token, process.env.TOKEN);
+  const userId = decryptedToken.userId;
+  const postId = req.params.id
 
-  if(decryptedTokend) {
-    try {
-      const deleteMySQLQuery = new Promise( (acc, rej) => {
-        con.query(
-          "DELETE FROM posts WHERE (id, user_id) = (?,?)",
-          [postId, userId],
-          err => {
-            if (err) return rej(false);
-            acc(true);
-          },
-        );
-      });
-      deleteMySQLQuery.then(result => res.status(200).json({message: 'Post supprimé !', success: true}))
-      .catch(err => {
-        console.error(err);
-        res.status(500).json({ message: "something wrong, please try again later" });
-      })
-    } catch (err) {
+
+  try {
+    const deleteMySQLQuery = new Promise( (acc, rej) => {
+      con.query(
+        "DELETE FROM posts WHERE (id, user_id) = (?,?)",
+        [postId, userId],
+        err => {
+          if (err) return rej(false);
+          acc(true);
+        },
+      );
+    });
+    deleteMySQLQuery.then(result => res.status(201).json({message: 'Post supprimé !', success: true}))
+    .catch(err => {
       console.error(err);
       res.status(500).json({ message: "something wrong, please try again later" });
-    }
+    })
+  } catch (err) {
+    console.error(err);
   }
+  res.status(200).json({message:"POST DELETED", success: true});
 };
 
  /**
@@ -111,7 +102,7 @@ const modifyPost = (req, res, next) => {
     res.status(401).json({ message: "unauthorized" });
   }
 
-  if(decryptedTokend) {
+  if(decryptedToken) {
     const content = req.body.content; 
     try {
       const modifyMySQLQuery = new Promise( (acc, rej) => {

@@ -8,7 +8,8 @@ import checkAuth from '../helpers/check-auth';
 
 const getPosts = async () => {
   const apiResponse = await axios("http://localhost:8080/api/posts");
-  const postsFromApi = apiResponse.data;
+  let postsFromApi = apiResponse.data;
+  postsFromApi = sortPostsByDate(postsFromApi);
   return postsFromApi;
 }
 
@@ -40,7 +41,6 @@ const Posts = () => {
     const userObj = await checkAuth(userIsLoggedIn);
     if (userObj.userIsLoggedIn) {
       let fetchedPosts = await getPosts();
-      fetchedPosts = sortPostsByDate(fetchedPosts);
       logUserIn(userObj);
       setPosts(fetchedPosts);
     } else {
@@ -61,7 +61,6 @@ const Posts = () => {
     try {
       const user_id = userData.userData.userId;
       if(content === ''){
-        console.log('Merci d\'écrire un message')
         alert("Message vide")
         return
       } else {
@@ -71,7 +70,6 @@ const Posts = () => {
         });
         alert("Message posté");
         let fetchedPosts = await getPosts();
-        fetchedPosts = sortPostsByDate(fetchedPosts);
         setPosts(fetchedPosts);  
       } }
       catch (error) {
@@ -89,12 +87,6 @@ const Posts = () => {
     setPosts(newPostsList);
   }
 
-  const modifyPostFromList = (postToModify, userId) => {
-    if (postToModify.user_id !== userId) return false;
-    const newModifyPostsList = posts.filter(post => post.id != postToModify.id);
-    setPosts(newModifyPostsList);
-  }
-  
   return (
     <div className="post-size">
       <form className='form' method="post">
@@ -103,10 +95,10 @@ const Posts = () => {
       </form>
       <h2 className="h2position">{posttitle}</h2>
       <ul>
-        {posts.map((post, index) => (
+        {posts.map((post) => {
           // passage de propriétés à un composant enfant
-          <Post key={`${post}-${index}`} post={post} userData={userData} modifyPostFromList={modifyPostFromList} removePostFromList={removePostFromList}/>
-        ))}
+          return <Post key={post.id} post={post} userData={userData} removePostFromList={removePostFromList}/>;
+        })}
       </ul>
     </div>
   );
