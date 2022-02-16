@@ -28,7 +28,6 @@ const sortPostsByDate = (posts) => {
 const Posts = () => {
 
   const [content, setContent] = useState('');
-
   const [posts, setPosts] = useState([]);
   const authContext = useContext(AuthContext);
   const {userIsLoggedIn, logUserIn, userData} = authContext;
@@ -82,8 +81,20 @@ const Posts = () => {
       } 
   }
 
-
   const posttitle = 'Publications récentes';
+
+  const removePostFromList = (postToRemove, userId) => {
+    if (postToRemove.user_id !== userId) return false;
+    const newPostsList = posts.filter(post => post.id != postToRemove.id);
+    setPosts(newPostsList);
+  }
+
+  const modifyPostFromList = (postToModify, userId) => {
+    if (postToModify.user_id !== userId) return false;
+    const newModifyPostsList = posts.filter(post => post.id != postToModify.id);
+    setPosts(newModifyPostsList);
+  }
+  
   return (
     <div className="post-size">
       <form className='form' method="post">
@@ -94,7 +105,7 @@ const Posts = () => {
       <ul>
         {posts.map((post, index) => (
           // passage de propriétés à un composant enfant
-          <Post key={`${post}-${index}`} content={post.content} id={post.id} userData={userData}/>
+          <Post key={`${post}-${index}`} post={post} userData={userData} modifyPostFromList={modifyPostFromList} removePostFromList={removePostFromList}/>
         ))}
       </ul>
     </div>

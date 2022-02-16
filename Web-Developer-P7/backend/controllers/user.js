@@ -37,7 +37,7 @@ const signup = async (req, res, next) => {
 const constructAuthResponse = (authed, userId, username) => {
   let authResponse = {
     statusCode: 401,
-    message: "Mot de passe incorrect !",
+    message: "unauthorized",
     success: false
   };
   if(authed) {
@@ -110,38 +110,45 @@ const login = async (req, res, next) => {
  */
 const deleteOne = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
-  const decryptedToken = jwt.verify(token, process.env.TOKEN);
-  const userId = decryptedToken.userId;
-  
+  let decryptedToken
+  let userId;
   try {
-    const deleteMySQLQuery = new Promise( (accept, reject) => {
-      con.query(
-        "DELETE FROM users WHERE id = ?",
-        [userId],
-        async (err, result) => {
-          if (err) reject(err);
-          if (result.length < 1) {
-           accept({
-             statusCode: 404,
-             message: "Utilisateur inexistant !",
-             success: false
-           });
-          }
-        }
-      );
-    });
-    deleteMySQLQuery.then(result => {
-      res.status(result.statusCode).json({message: result.message, success: result.success});
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ message: errorMessage500 });
-    })
+    decryptedToken = jwt.verify(token, process.env.TOKEN);
+    userId = decryptedToken.userId;
   } catch (error) {
-    console.log(error)
-    res.status(401).json({message:"UNAUTHORIZED", success: false});
+    constructAuthResponse(false);
   }
-  res.status(200).json({message:"ACCOUNT DELETED", success: true});
+  
+  if(decryptedToken) {
+    try {
+      const deleteMySQLQuery = new Promise( (accept, reject) => {
+        con.query(
+          "DELETE FROM users WHERE id = ?",
+          [userId],
+          async (err, result) => {
+            if (err) reject(err);
+            if (result.length < 1) {
+             accept({
+               statusCode: 404,
+               message: "Utilisateur inexistant !",
+               success: false
+             });
+            }
+          }
+        );
+      });
+      deleteMySQLQuery.then(result => {
+        res.status(result.statusCode).json({message: result.message, success: result.success});
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ message: errorMessage500 });
+      })
+    } catch (error) {
+      console.log(error)
+      res.status(401).json({message:"UNAUTHORIZED", success: false});
+    }
+  }
 }
 
 /**
@@ -155,8 +162,8 @@ const checkAuth = (req, res, response) => {
   const userId = req.query.userId;
   const username = req.query.username
   try {
-    const decodedToken = jwt.verify(token, process.env.TOKEN);
-    constructAuthResponse(decodedToken, userId, username);
+    const decryptedToken = jwt.verify(token, process.env.TOKEN);
+    constructAuthResponse(decryptedToken, userId, username);
   } catch (error) {
     constructAuthResponse(false);
   }

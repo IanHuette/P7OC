@@ -6,6 +6,7 @@ const postCtrl = require('../controllers/post');
 router.get('/', postCtrl.getAllPosts);
 router.delete('/:id', postCtrl.deletePost);
 router.post('/create', postCtrl.createPost);
+router.put('/:id', postCtrl.modifyPost)
 
 // SECONDARY
 // TODO use multer to upload image if any time left

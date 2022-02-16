@@ -58,37 +58,86 @@ const createPost = (req, res, next) => {
  * SUPPRIMER UN POST
  */
 const deletePost = (req, res, next) => {
+  // TODO factorize token verification behavior
   const token = req.headers.authorization.split(' ')[1];
-  const decryptedToken = jwt.verify(token, process.env.TOKEN);
-  const userId = decryptedToken.userId;
-  const postId = req.params.id
-
-
+  let decryptedToken = false;
+  let userId;
+  let postId;
   try {
-    const deleteMySQLQuery = new Promise( (acc, rej) => {
-      con.query(
-        "DELETE FROM posts WHERE (id, user_id) = (?,?)",
-        [postId, userId],
-        err => {
-          if (err) return rej(false);
-          acc(true);
-        },
-      );
-    });
-    deleteMySQLQuery.then(result => res.status(201).json({message: 'Post supprimé !', success: true}))
-    .catch(err => {
+    decryptedToken = jwt.verify(token, process.env.TOKEN);
+    userId = decryptedToken.userId;
+    postId = req.params.id
+  } catch (error) {
+    res.status(401).json({ message: "unauthorized" });
+  }
+
+  if(decryptedTokend) {
+    try {
+      const deleteMySQLQuery = new Promise( (acc, rej) => {
+        con.query(
+          "DELETE FROM posts WHERE (id, user_id) = (?,?)",
+          [postId, userId],
+          err => {
+            if (err) return rej(false);
+            acc(true);
+          },
+        );
+      });
+      deleteMySQLQuery.then(result => res.status(200).json({message: 'Post supprimé !', success: true}))
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ message: "something wrong, please try again later" });
+      })
+    } catch (err) {
       console.error(err);
       res.status(500).json({ message: "something wrong, please try again later" });
-    })
-  } catch (err) {
-    console.error(err);
+    }
   }
-  res.status(200).json({message:"POST DELETED", success: true});
-}
+};
+
+ /**
+ * MODIFIER UN POST
+ */
+const modifyPost = (req, res, next) => {
+  const token = req.body.headers.Authorization.split(' ')[1];
+  let decryptedToken = false;
+  let userId;
+  let postId;
+  try {
+    decryptedToken = jwt.verify(token, process.env.TOKEN);
+    userId = decryptedToken.userId;
+    postId = req.params.id
+  } catch (error) {
+    res.status(401).json({ message: "unauthorized" });
+  }
+
+  if(decryptedTokend) {
+    const content = req.body.content; 
+    try {
+      const modifyMySQLQuery = new Promise( (acc, rej) => {
+        con.query(
+          "UPDATE posts SET content = (?) WHERE (id, user_id) = (?,?)",
+          [content, postId, userId],
+          err => {
+            if (err) return rej(false);
+            acc(true);
+          },
+        );
+      });
+      modifyMySQLQuery.then(result => res.status(200).json({message: 'Post modifié !', success: true}))
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ message: "something wrong, please try again later" });
+      })
+    } catch (err) {
+      console.error(err);
+    }
+  }
+};
 
 module.exports = {
     getAllPosts,
-    // getOnePost,
+    modifyPost,
     createPost,
     deletePost
 };

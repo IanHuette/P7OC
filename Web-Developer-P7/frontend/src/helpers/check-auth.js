@@ -30,9 +30,7 @@ const checkAuth = (userLoggedIn) => {
                 userData: APIResponse.data.message,
                 userIsLoggedIn: APIResponse.data.success
             };
-        } catch (err) {
-            console.error(err);
-        }
+        } catch (err) {}
     }
     if (!userObj.userIsLoggedIn) {
         userObj = {
