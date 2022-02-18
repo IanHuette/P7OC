@@ -158,9 +158,34 @@ const deleteOne = async (req, res, next) => {
   }
 }
 
+const getOneUser = async (req, res, next) => {
+  const userId = req.params.userId;
+console.log(userId);
+  const getOneUserQuery = new Promise((accept, reject) => {
+    con.query(
+      "SELECT username FROM users WHERE id = ?", 
+      [userId], function (err, result, fields) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        }
+        accept(result);
+      }
+    )
+  });
+  try {
+    oneUser = await getOneUserQuery;
+    res.status(201).json({message: oneUser, success: true});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({message: serverErrorMessage, success: false});
+  }
+}
+
 module.exports = {
   signup,
   login,
-  deleteOne, 
+  deleteOne,
+  getOneUser, 
   checkAuth
 };

@@ -1,5 +1,5 @@
 import '../styles/components/Post.css';
-import React, { useState, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import axios from "axios";
 
 
@@ -9,6 +9,11 @@ const Post = props => {
 
   const [isEdit, setIsEdit] = useState(false);
   const [postContent, setPostContent] = useState(post.content);
+  const [username, setUsername] = useState('');
+
+  useEffect(async () => {
+    setUsername(await getUsername())
+  }, [])
 
   /**
    * SUPPRESSION D'UN POST
@@ -35,6 +40,8 @@ const Post = props => {
   const onToggleEditionMode = () => {
     setIsEdit(true);
   }
+    
+  
 
   const onCancelUpdate = () => {
     setIsEdit(false);
@@ -64,13 +71,19 @@ const Post = props => {
     }
   } 
 
+ const getUsername = async () => {
+    const apiResponse = await axios.get(`http://localhost:8080/api/auth/${post.user_id}`);
+    let fetchedUsername = apiResponse.data.message[0].username;
+    return fetchedUsername;
+ }
+
   const dateForFront = new Date(post.created_at);
   const dateFR = dateForFront.toLocaleString("fr-FR")
 
   return <Fragment>
     {isEdit 
       ? <p><input type="text" value={postContent} onChange={onContentChange}/>&nbsp;<span className='testdesign'><i className="fa-solid fa-check" onClick={onValidateUpdate}></i><i className="fa-solid fa-ban" onClick={onCancelUpdate}></i></span></p>
-      : <li className="newpost">posté le {dateFR} <i onClick={onToggleEditionMode} className="fa-solid fa-pen-to-square" /><i onClick={onClickDelete} className="fa-solid fa-trash-can" /><br></br>{postContent}</li>
+      : <li className="newpost">{username} posté le {dateFR} <i onClick={onToggleEditionMode} className="fa-solid fa-pen-to-square" /><i onClick={onClickDelete} className="fa-solid fa-trash-can" /><br></br>{postContent}</li>
     }
   </Fragment>
 };

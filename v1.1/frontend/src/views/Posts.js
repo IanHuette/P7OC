@@ -6,6 +6,9 @@ import AuthContext from "../contexts/auth/AuthContext";
 import {useNavigate} from "react-router-dom";
 import checkAuth from '../helpers/check-auth';
 
+  /**
+ * LOGIQUE D'AFFICHAGE DES POSTS
+ */
 const getPosts = async (userData) => {
   console.log(userData);
   const apiResponse = await axios("http://localhost:8080/api/posts?userId="+userData.userId, {headers: {
@@ -16,6 +19,9 @@ const getPosts = async (userData) => {
   return postsFromApi;
 }
 
+  /**
+ * LOGIQUE DE TRI PAR DATE DES POSTS
+ */
 const sortPostsByDate = (posts) => {
   console.log(posts)
   posts.sort((a, b) => {
@@ -87,6 +93,9 @@ const Posts = () => {
 
   const posttitle = 'Publications récentes';
 
+  /**
+ * LOGIQUE D'UPDATE DU STATE POUR AFFICHER DYNAMIQUEMENT LA SUPPRESSION D'UN POST
+ */
   const removePostFromList = (postToRemove, userId) => {
     console.log(postToRemove, userId);
     if (postToRemove.user_id !== userId) return false;
