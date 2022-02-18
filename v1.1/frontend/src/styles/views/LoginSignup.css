@@ -1,0 +1,46 @@
+@media screen and (max-width: 768px) {
+  form {
+    /* width:100%;  /* mediaqueries for laptop */
+    margin: 30px;
+    padding: 30px;
+    border: 1px solid #f1f1f1;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  }
+  form h1 {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding-bottom: 10px;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+
+  input[type="submit"] {
+    background-color: rgb(164, 164, 243);
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  input[type="submit"]:hover {
+    background-color: white;
+    color: #53af57;
+    border: 1px solid #53af57;
+  }
+}
