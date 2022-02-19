@@ -1,5 +1,5 @@
 
-// this file is meant to host our global app' state for everything that's related to authentication
+// Ce fichier configure l'état global d'auth dans l'application
 
 import React, {useReducer} from "react";
 

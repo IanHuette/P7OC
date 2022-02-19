@@ -5,6 +5,9 @@ const unauthorizedObj = {
     success: false
 };
 
+/**
+ * VÉRIFIE QUE DANS LA REQUETE IL Y A UN USER ID PUIS COMPARE LE USER ID AVEC LE TOKEN JWT
+ */
 const authMiddleware = (req, res, next) => { // vérifie si le token envoyé est valable et si l'user id correspond bien
   try {
     const token = req.headers.authorization.split(' ')[1]; // extrait le token du header authorization / split pour récupérer tout après l'espace dans le header

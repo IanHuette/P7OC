@@ -73,7 +73,7 @@ const deletePost = async (req, res, next) => {
   const postId = req.params.postId;
   const userId = req.query.userId;
 
-  // pour une raison étrange, le middleware d'authentification provoque une erreur pour cette route DELETE...
+  // pour une raison étrange, le middleware d'authentification provoque une erreur de headers pour cette route DELETE...
   const token = req.headers.authorization.split(' ')[1].length >= 2 ? req.headers.authorization.split(' ')[1] : ''; // extrait le token du header authorization / split pour récupérer tout après l'espace dans le header
   const decodedToken = jwt.verify(token, process.env.token);  // fonction verify pour décoder le token (si il n'est pas valide une erreur sera génégée)
   const decryptedUserId = decodedToken.userId ? decodedToken.userId : 0; // extrait de l'userID du token

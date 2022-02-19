@@ -9,6 +9,10 @@ const userNotFoundObj = {
   success: false  
 }
 
+
+/**
+ * VERIFIE QUE L'ID PASSÉ DANS LE JWT CORRESPOND BIEN A L'ID REQUETÉ
+ */
 const checkAuth = async (req, res, next) => {
 
   const loginQuery = new Promise( (accept, reject) => {

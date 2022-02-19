@@ -20,15 +20,15 @@ const Banner = () => {
     
     return (
         <div className="gpm-banner">
-            <h1 className='gpm-title'><img src={logo} alt='Groupomania' className='gpm-logo' />{title}</h1>
+            <h1 className='gpm-title'><img src={logo} alt='' className='gpm-logo' />{title}</h1>
             {location.pathname === "/" &&
             <div className='nav'>
-                <Link to ="../profil"><i className="fa-solid fa-user"></i><input id="inputName" className="profilbutton" type="button" value ={username} /></Link>
+                <Link to ="../profil" aria-label='Profil'><i className="fa-solid fa-user"></i><input id="inputName" className="profilbutton" type="button" value ={username} /></Link>
             </div>
             }
             {location.pathname === "/profil" &&
             <div className='btnleft'>
-                <Link to ="../"><i className="fa-solid fa-arrow-left"></i></Link>
+                <Link to ="../" aria-label='Home'><i className="fa-solid fa-arrow-left"></i></Link>
             </div>
             }
         </div>

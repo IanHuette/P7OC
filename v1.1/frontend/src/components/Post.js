@@ -2,7 +2,7 @@ import '../styles/components/Post.css';
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from "axios";
 
-
+// composant chargé de l'affichage d'un seul post
 const Post = props => {
 
   const {post, userData, removePostFromList} = props;
@@ -37,6 +37,7 @@ const Post = props => {
   /**
    * MODIFICATION D'UN POST
    */
+
   const onToggleEditionMode = () => {
     setIsEdit(true);
   }
@@ -79,7 +80,7 @@ const Post = props => {
 
   const dateForFront = new Date(post.created_at);
   const dateFR = dateForFront.toLocaleString("fr-FR")
-
+// En utilisant le state local de l'app on a un 'interrupteur' qui va mettre le composant en mode edition ou pas, en mode edition on affiche un input
   return <Fragment>
     {isEdit 
       ? <p><input type="text" value={postContent} onChange={onContentChange}/>&nbsp;<span className='testdesign'><i className="fa-solid fa-check" onClick={onValidateUpdate}></i><i className="fa-solid fa-ban" onClick={onCancelUpdate}></i></span></p>

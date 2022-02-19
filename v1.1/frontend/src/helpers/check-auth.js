@@ -2,7 +2,7 @@
 // ✅ si userLoggedIn est false, vérifier si on des infos user dans le local storage
 // ✅ récupérer depuis le localStorage le token + le user id
 // ✅ envoyer le token + user id auprès du backend 
-// ✅ on clear le local storage SI 
+// ✅ on clear le local storage SI l'authentification n'est pas validée
 
 import axios from "axios";
 

@@ -20,7 +20,7 @@ const getPosts = async (userData) => {
 }
 
   /**
- * LOGIQUE DE TRI PAR DATE DES POSTS
+ * LOGIQUE DE TRI PAR DATE DES POSTS CHRONOLOGIQUE
  */
 const sortPostsByDate = (posts) => {
   console.log(posts)
@@ -45,13 +45,14 @@ const Posts = () => {
   const navigate = useNavigate();
 
     /**
-     * VÉRIFICATION SI L'USER EST BIEN CONNECTÉ SINON RENVOYEr À LA PAGE DE CONNEXION
+     * VÉRIFICATION SI L'USER EST BIEN CONNECTÉ SINON RENVOYER À LA PAGE DE CONNEXION
      */
      useEffect(async () => {  
       const userDataFromLS = await checkAuth(userIsLoggedIn);
       if (!userDataFromLS.userIsLoggedIn) {
           navigate("/login");
       } else {
+        // Une fois qu'on a récupéré les posts depuis l'API on met à jour le state local du composant avec useState (fonction setPosts)
         const fetchedPosts = await getPosts(userDataFromLS.userData);
         setPosts(fetchedPosts);
         logUserIn(userDataFromLS);
@@ -106,13 +107,17 @@ const Posts = () => {
   return (
     <div className="post-size">
       <form className='form' method="post">
-          <input type="text" className="input"  placeholder="Quoi de Neuf ?" onChange={onContentChange}></input>
+          <input aria-label='publication' type="text" className="input"  placeholder="Quoi de Neuf ?" onChange={onContentChange}></input>
           <button className='button-post' onClick={onSubmitPost}>Publier</button>
+          
       </form>
       <h2 className="h2position">{posttitle}</h2>
       <ul>
+        {/* On fait une boucle en utilisant la fonction map qui retourne un sous-composant Post pour chaque post, 
+            A chaque sous composant on passe des données qui nous permettront d'identifier chaque post depuis le sous composant
+        */}
         {posts.map((post) => {
-          // passage de propriétés à un composant enfant
+          // On a besoin d'identifer chaque post de manière unique avec une clef sinon le tri par date fonctionne mal
           return <Post key={post.id} post={post} userData={userData} removePostFromList={removePostFromList}/>;
         })}
       </ul>
