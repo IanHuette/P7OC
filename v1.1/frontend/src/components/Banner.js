@@ -31,6 +31,11 @@ const Banner = () => {
                 <Link to ="../" aria-label='Home'><i className="fa-solid fa-arrow-left"></i></Link>
             </div>
             }
+            {location.pathname === "/comments" &&
+            <div className='btnleft'>
+                <Link to ="../" aria-label='Home'><i className="fa-solid fa-arrow-left"></i></Link>
+            </div>
+            }
         </div>
     );
 

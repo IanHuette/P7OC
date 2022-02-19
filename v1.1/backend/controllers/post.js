@@ -32,6 +32,28 @@ const getAllPosts = async (req, res, next) => {
   }
 };
 
+/**
+ * AFFICHER UN POST
+ */
+const getOnePost = async (req, res, next) => {
+  const postId = req.params.postId;
+  const getOnePostQuery = new Promise((accept, reject) => {
+    con.query("SELECT * FROM posts WHERE id = ?",[postId], function (err, result, fields) {
+      if (err) {
+        console.error(err);
+        reject(err);
+      }
+      accept(result);
+    });
+  });
+  try {
+    post = await getOnePostQuery;
+    res.status(200).json({message: post, success: true});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({message: serverErrorMessage, success: false});
+  }
+}
 
 /**
  * CRÉER UN POST
@@ -140,6 +162,7 @@ const updatePost = async (req, res, next) => {
 
 module.exports = {
     getAllPosts,
+    getOnePost,
     updatePost,
     createPost,
     deletePost

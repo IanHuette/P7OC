@@ -1,0 +1,6 @@
+INSTALLATION
+
+1- open db.sql in your DB SQL and run the script for initialize 
+2- open terminal backend and run NPM INSTALL then, run NODEMON SERVER
+3- open terminal frontend and run NPM INSTALL then, run npm start
+

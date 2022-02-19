@@ -1,6 +1,8 @@
 import '../styles/components/Post.css';
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 
 // composant chargé de l'affichage d'un seul post
 const Post = props => {
@@ -78,13 +80,28 @@ const Post = props => {
     return fetchedUsername;
  }
 
+
+ const getPostId = post.id
+
+ const params = { 
+  pathname: `comments/${getPostId}`, 
+  state: {post} 
+ }
   const dateForFront = new Date(post.created_at);
   const dateFR = dateForFront.toLocaleString("fr-FR")
 // En utilisant le state local de l'app on a un 'interrupteur' qui va mettre le composant en mode edition ou pas, en mode edition on affiche un input
   return <Fragment>
     {isEdit 
-      ? <p><input type="text" value={postContent} onChange={onContentChange}/>&nbsp;<span className='testdesign'><i className="fa-solid fa-check" onClick={onValidateUpdate}></i><i className="fa-solid fa-ban" onClick={onCancelUpdate}></i></span></p>
-      : <li className="newpost">{username} posté le {dateFR} <i onClick={onToggleEditionMode} className="fa-solid fa-pen-to-square" /><i onClick={onClickDelete} className="fa-solid fa-trash-can" /><br></br>{postContent}</li>
+      ? <p><input type="text" value={postContent} onChange={onContentChange}/>&nbsp;
+          <span className='testdesign'>
+            <i className="fa-solid fa-check" onClick={onValidateUpdate}></i>
+            <i className="fa-solid fa-ban" onClick={onCancelUpdate}></i>
+          </span>
+        </p>
+      : <li className="newpost">{username} posté le {dateFR} <i onClick={onToggleEditionMode} className="fa-solid fa-pen-to-square" />
+          <i onClick={onClickDelete} className="fa-solid fa-trash-can" /><br></br>{postContent}<br></br>
+          <Link to ={params} >Commentaire</Link>
+        </li>
     }
   </Fragment>
 };
