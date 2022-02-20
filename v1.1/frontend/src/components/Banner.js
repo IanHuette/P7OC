@@ -17,7 +17,7 @@ const Banner = () => {
         const userDataFromLocalStorageParsed = JSON.parse(userDataFromLocalStorage);
         username = userDataFromLocalStorageParsed.username ? userDataFromLocalStorageParsed.username: ' ';
     }
-    
+
     return (
         <div className="gpm-banner">
             <h1 className='gpm-title'><img src={logo} alt='' className='gpm-logo' />{title}</h1>
@@ -31,8 +31,9 @@ const Banner = () => {
                 <Link to ="../" aria-label='Home'><i className="fa-solid fa-arrow-left"></i></Link>
             </div>
             }
-            {location.pathname === "/comments" &&
+            {location.pathname.startsWith("/comments") &&
             <div className='btnleft'>
+                <Link to ="../profil" aria-label='Profil'><i className="fa-solid fa-user"></i><input id="inputName" className="profilbutton" type="button" value ={username} /></Link>
                 <Link to ="../" aria-label='Home'><i className="fa-solid fa-arrow-left"></i></Link>
             </div>
             }

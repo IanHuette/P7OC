@@ -74,7 +74,6 @@ const PostComment = () => {
         logUserIn(userDataFromLS);
       }
       }, [])
-
       const onCommentChange = e => {
         setComment(e.target.value)
       }
@@ -107,6 +106,29 @@ const PostComment = () => {
             return
           } 
       }
+    
+
+
+    // TODO
+    // const onClickDelete = async (cmt) => {
+    //   if (!window.confirm(`Voulez-vous vraiment supprimer le commentaire ?`)) return;
+    //   let commentRemoved = false;
+    //   try {
+    //     const APIResponse = await axios.delete(`http://localhost:8080/api/comments/${post.id}?userId=${userData.userData.userId}&postUserId=${post.user_id}`,{
+    //       headers: {
+    //         'Authorization': 'Bearer ' + userData.userData.token
+    //       }
+    //     });
+    //     commentRemoved = APIResponse.data.success;
+    //   } catch (err) {
+    //     console.error(err)
+    //   }
+    //   if (!commentRemoved) {
+    //     alert("Vous ne pouvez pas supprimer ce post !");
+    //   } else {
+    //     // removePostFromList(post, userData.userData.userId);
+    //   }
+    // }
 
   return (
     <div>
@@ -122,7 +144,7 @@ const PostComment = () => {
         {comments.map((cmt) => {
           const dateForFront = new Date(cmt.created_at);
           const dateFR = dateForFront.toLocaleString("fr-FR");
-          return <li key={cmt.id} className='newpost'>{cmt.username} a posté le {dateFR}<br></br>{cmt.comment}</li>;
+          return <li key={cmt.id}  className='newpost'>{cmt.username} a posté le {dateFR} <i className="fa-solid fa-pen-to-square" /><i onClick={() => onClickDelete(cmt)} className="fa-solid fa-trash-can" /><br></br>{cmt.comment}</li>;
         })}
     </div>
   )
