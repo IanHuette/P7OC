@@ -94,27 +94,50 @@ const createPost = async (req, res, next) => {
 const deletePost = async (req, res, next) => {
   const postId = req.params.postId;
   const userId = req.query.userId;
+  const postUserId = req.query.postUserId;
+
+  let isModerator = false;
+
+  const searchModerator = new Promise((accept, reject) => {
+    con.query(
+      "SELECT isModerator FROM users WHERE id = ?",
+      [userId],
+      function (err, result) {
+        if (err) {
+          console.error(err);
+          reject(err);
+        }
+        accept(result);
+      });
+  });
+
+  try {
+    const isModeratorRes = await searchModerator;
+    isModerator = isModeratorRes[0].isModerator == 1 ? true : false;
+  } catch (err) {
+    console.error(err);
+  } 
 
   // pour une raison étrange, le middleware d'authentification provoque une erreur de headers pour cette route DELETE...
   const token = req.headers.authorization.split(' ')[1].length >= 2 ? req.headers.authorization.split(' ')[1] : ''; // extrait le token du header authorization / split pour récupérer tout après l'espace dans le header
   const decodedToken = jwt.verify(token, process.env.token);  // fonction verify pour décoder le token (si il n'est pas valide une erreur sera génégée)
   const decryptedUserId = decodedToken.userId ? decodedToken.userId : 0; // extrait de l'userID du token
 
-  if (userId != decryptedUserId) {
+  if (postUserId!= decryptedUserId && !isModerator) { 
     res.status(401).json(unauthorizedObj);
-  } else {
+  } 
+  // ici on est sûrs que même si un utilisateur authentifié tente d'effacer le post d'un autre user, la paire id/user_id ne matchera pas
+  else {
     const deletePostQuery = new Promise((accept, reject) => {
       con.query(
-        // ici on est sûrs que même si un utilisateur authentifié tente d'effacer le post d'un autre user, la paire id/user_id ne matchera pas
-        "DELETE FROM posts WHERE (id, user_id) = (?,?)",
-        [postId, userId],
+        "DELETE FROM posts WHERE (id) = (?)",
+        [postId],
         err => {
           if (err) reject(false);
           accept(true);
         }
       );
     }); 
-  
     try {
       await deletePostQuery;
       res.status(200).json({message: 'Post supprimé !', success: true});

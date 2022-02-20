@@ -34,12 +34,13 @@ const authMiddleware = (req, res, next) => { // vérifie si le token envoyé est
   }
 };
 
-const getUserDataResponse = (userId, username) => {
+const getUserDataResponse = (userId, username, isModerator = 0) => {
     return {
         statusCode: 200,
         message: {
             userId: userId,
             username: username,
+            isModerator: isModerator,
             token: jwt.sign(
                 { userId: userId },
                 process.env.TOKEN,

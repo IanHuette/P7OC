@@ -16,6 +16,7 @@ app.use((req, res, next) => {
 const con = require("./database");
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
+const commentRoutes = require('./routes/comment');
 const { authMiddleware } = require('./middleware/auth');
 
 con.connect(function(err) {
@@ -33,6 +34,7 @@ con.connect(function(err) {
 
 app.use('/api/posts', postRoutes);
 app.use('/api/auth', userRoutes);
+app.use('/api/comments', commentRoutes);
 
 module.exports = {
   app,

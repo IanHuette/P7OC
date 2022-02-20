@@ -15,6 +15,8 @@
 11. mise à jour et supression de posts par un utilisateur ✅
 12. comments + clean up dead code ✅
 13. amélioration de l'affichage + du style de l'app' ✅
+14. compte admin de modérateur ✅
+15. suppression des commentaires (par modérateur ou bien utilisateur) + nom du username dans la banner dans la page commentaires
 
 ## FONCTIONNALITES BONUS
 
@@ -26,5 +28,4 @@
   - données de req.body au signup et au login
 - tous les liens accessibles depuis la navbar
 - associer une image à un post
-- compte admin de modérateur
 - pouvoir mettre en place un système de notification sur les nouveaux posts (5 nouveaux post depuis votre derniere visite)

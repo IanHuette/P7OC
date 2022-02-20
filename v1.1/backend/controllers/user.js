@@ -17,7 +17,7 @@ const checkAuth = async (req, res, next) => {
 
   const loginQuery = new Promise( (accept, reject) => {
     con.query(
-      "SELECT id, username FROM users WHERE id = ?",
+      "SELECT id, username, isModerator FROM users WHERE id = ?",
       [req.body.userIdRef],
       async (err, result) => {
         if (err) 
@@ -29,7 +29,8 @@ const checkAuth = async (req, res, next) => {
           // comportement si on a trouvé un utilisateur
           const userIdFromQueryResult = result[0].id;
           const usernameFromQueryResult = result[0].username;
-          accept(getUserDataResponse(userIdFromQueryResult, usernameFromQueryResult));
+          const isModerator = result[0].isModerator;
+          accept(getUserDataResponse(userIdFromQueryResult, usernameFromQueryResult, isModerator));
         }
       }
     );
@@ -89,7 +90,7 @@ const login = async (req, res, next) => {
 
   const loginQuery = new Promise( (accept, reject) => {
     con.query(
-      "SELECT password,id FROM users WHERE username = ?",
+      "SELECT password, id, isModerator FROM users WHERE username = ?",
       [username],
       async (err, result) => {
         if (err) 
@@ -101,13 +102,14 @@ const login = async (req, res, next) => {
           // comportement si on a trouvé un utilisateur
           const userIdFromQueryResult = result[0].id;
           const hashFromQueryResult = result[0].password;
+          const isModerator = result[0].isModerator;
           // on veut comparer le hash depuis la requête avec celui obtenu depuis la base de données
           try {
             const hashComparison = await bcrypt.compare(password, hashFromQueryResult);
             if (!hashComparison) {
               throw new Error("passwords dont match");
             }
-            accept(getUserDataResponse(userIdFromQueryResult, username));
+            accept(getUserDataResponse(userIdFromQueryResult, username, isModerator));
           } catch (err) {
             reject(err);
           }

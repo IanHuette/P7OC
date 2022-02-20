@@ -22,17 +22,21 @@ const Post = props => {
    */
   const onClickDelete = async () => {
     if (!window.confirm(`Voulez-vous vraiment supprimer le post ?`)) return;
-    const APIResponse = await axios.delete(`http://localhost:8080/api/posts/${post.id}?userId=${userData.userData.userId}`,{
-      headers: {
-        'Authorization': 'Bearer ' + userData.userData.token
-      }
-    });
-    const postRemoved = removePostFromList(post, userData.userData.userId);
-    if (!APIResponse.data.success) {
-      alert("Post non existant");
+    let postRemoved = false;
+    try {
+      const APIResponse = await axios.delete(`http://localhost:8080/api/posts/${post.id}?userId=${userData.userData.userId}&postUserId=${post.user_id}`,{
+        headers: {
+          'Authorization': 'Bearer ' + userData.userData.token
+        }
+      });
+      postRemoved = APIResponse.data.success;
+    } catch (err) {
+      console.error(err)
     }
-    if (postRemoved === false) {
+    if (!postRemoved) {
       alert("Vous ne pouvez pas supprimer ce post !");
+    } else {
+      removePostFromList(post, userData.userData.userId);
     }
   }
 
@@ -84,7 +88,7 @@ const Post = props => {
  const getPostId = post.id
 
  const params = { 
-  pathname: `comments/${getPostId}`, 
+  pathname: `comments/postid=${getPostId}=${username}`, 
   state: {post} 
  }
   const dateForFront = new Date(post.created_at);

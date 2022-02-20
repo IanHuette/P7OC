@@ -10,7 +10,6 @@ import checkAuth from '../helpers/check-auth';
  * LOGIQUE D'AFFICHAGE DES POSTS
  */
 const getPosts = async (userData) => {
-  console.log(userData);
   const apiResponse = await axios("http://localhost:8080/api/posts?userId="+userData.userId, {headers: {
     'Authorization': 'Bearer ' + userData.token
   }});
@@ -23,7 +22,6 @@ const getPosts = async (userData) => {
  * LOGIQUE DE TRI PAR DATE DES POSTS CHRONOLOGIQUE
  */
 const sortPostsByDate = (posts) => {
-  console.log(posts)
   posts.sort((a, b) => {
     const splittedDateA = a.created_at.split("T");
     const splittedDateB = b.created_at.split("T");
@@ -98,8 +96,7 @@ const Posts = () => {
  * LOGIQUE D'UPDATE DU STATE POUR AFFICHER DYNAMIQUEMENT LA SUPPRESSION D'UN POST
  */
   const removePostFromList = (postToRemove, userId) => {
-    console.log(postToRemove, userId);
-    if (postToRemove.user_id !== userId) return false;
+    if (postToRemove.user_id !== userId && !userData.userData.isModerator) return false;
     const newPostsList = posts.filter(post => post.id != postToRemove.id);
     setPosts(newPostsList);
   }
