@@ -131,5 +131,5 @@ const getAllComments = async (req, res, next) => {
 module.exports = {
     getAllComments,
     createComment,
-    deleteComment
+    // deleteComment
 }

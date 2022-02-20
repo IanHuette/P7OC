@@ -144,7 +144,9 @@ const PostComment = () => {
         {comments.map((cmt) => {
           const dateForFront = new Date(cmt.created_at);
           const dateFR = dateForFront.toLocaleString("fr-FR");
-          return <li key={cmt.id}  className='newpost'>{cmt.username} a posté le {dateFR} <i className="fa-solid fa-pen-to-square" /><i onClick={() => onClickDelete(cmt)} className="fa-solid fa-trash-can" /><br></br>{cmt.comment}</li>;
+          return <li key={cmt.id}  className='newpost'>{cmt.username} a posté le {dateFR} <i className="fa-solid fa-pen-to-square" /><i 
+          // onClick={() => onClickDelete(cmt)} 
+          className="fa-solid fa-trash-can" /><br></br>{cmt.comment}</li>;
         })}
     </div>
   )
