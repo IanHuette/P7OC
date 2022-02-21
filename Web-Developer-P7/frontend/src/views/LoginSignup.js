@@ -93,15 +93,13 @@ const LoginSignup = () => {
                 : <h1>Connexion</h1>
             }
             <label><b>Nom d'utilisateur</b></label>
-            <div id='usernameError'></div>
-            <input id="usernameForm" type="text" placeholder="Entrer le nom d'utilisateur" name="username" value={username} onChange={onUsernameChange} required />
+            <input type="text" placeholder="Entrer le nom d'utilisateur" name="username" value={username} onChange={onUsernameChange} required />
             <label><b>Mot de passe</b></label>
-            <div id='passwordError'></div>
-            <input id="passwordForm" type="password" placeholder="Entrer le mot de passe" name="password" value={password} onChange={onPasswordChange} required />
+            <input type="password" placeholder="Entrer le mot de passe" name="password" value={password} onChange={onPasswordChange} required />
             {location.pathname === "/signup" && 
                 <React.Fragment>
                     <label><b>Email</b></label>
-                    <input id="emailForm" type="email" placeholder="Entrer votre adresse mail" name="email" value={email} onChange={onEmailChange} required />
+                    <input type="email" placeholder="Entrer votre adresse mail" name="email" value={email} onChange={onEmailChange} required />
                 </React.Fragment>
             }
             {location.pathname === "/signup"

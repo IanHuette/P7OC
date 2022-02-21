@@ -17,25 +17,12 @@ const getAllPosts = (req, res, next) => {
 };
 
 /**
- * AFFICHER UN POST
- */
-// const getOnePost = (req, res, next) => {
-//   con.connect(function(err) {
-//     if (err) {
-//       res.status(500).json({ message: "something wrong, please try again later" });
-//     }
-//     con.query("SELECT id FROM posts", function (err, result, fields) {
-//       if (err) res.status(500).json({ message: "something wrong, please try again later" });
-//       res.status(200).json(result);
-//     });
-//   });
-// };
-/**
  * CRÉER UN POST
  */
 const createPost = (req, res, next) => {
     const content = req.body.content;
     const user_id = req.body.user_id;
+    //const user_name = req.body.user_name;
 
   try {
     const createMySQLQuery = new Promise( (accept, reject) => {

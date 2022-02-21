@@ -52,6 +52,7 @@ CREATE TABLE `posts` (
   `id` int NOT NULL AUTO_INCREMENT,
   `content` varchar(255) NOT NULL,
   `user_id` int NOT NULL,
+  -- `user_name` varchar(255) NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),

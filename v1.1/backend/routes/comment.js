@@ -5,12 +5,12 @@ const { authMiddleware } = require('../middleware/auth');
 const { 
     getAllComments, 
     createComment, 
-    // deleteComment 
+    deleteComment 
 } = require('../controllers/comment');
 
 router.get('/:postId', getAllComments);
 router.post('/:postId', authMiddleware, createComment);
 // TODO
-// router.delete('/:commentId', deleteComment);
+router.delete('/:commentId', deleteComment);
 
 module.exports = router;

@@ -33,6 +33,7 @@ const Post = props => {
    * MODIFICATION D'UN POST
    */
   const onToggleEditionMode = () => {
+    console.log(userData);
     setIsEdit(true);
   }
 
@@ -65,12 +66,14 @@ const Post = props => {
     }
   } 
 
+  const dateForFront = new Date(post.created_at);
+  const test = dateForFront.toLocaleString("fr-FR")
 
 
   return <Fragment>
     {isEdit 
       ? <p><input type="text" value={postContent} onChange={onContentChange}/>&nbsp;<i className="fa-solid fa-check" onClick={onValidateUpdate}></i><i className="fa-solid fa-ban" onClick={onCancelUpdate}></i></p>
-      : <li className="newpost">{postContent} <i onClick={onToggleEditionMode} className="fa-solid fa-pen-to-square" /><i onClick={onClickDelete} className="fa-solid fa-trash-can" /></li>
+      : <li className="newpost">posté le {test}<br></br>{postContent} <i onClick={onToggleEditionMode} className="fa-solid fa-pen-to-square" /><i onClick={onClickDelete} className="fa-solid fa-trash-can" /></li>
     }
   </Fragment>
 };

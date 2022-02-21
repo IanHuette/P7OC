@@ -60,6 +60,7 @@ const Posts = () => {
     let apiResult;
     try {
       const user_id = userData.userData.userId;
+      //const user_name = userData.userData.username;
       if(content === ''){
         alert("Message vide")
         return
@@ -67,6 +68,7 @@ const Posts = () => {
         apiResult = await axios.post(`http://localhost:8080/api/posts/create`, {
           content : content,
           user_id : user_id,
+          //user_name : user_name,
         });
         alert("Message posté");
         let fetchedPosts = await getPosts();
@@ -83,7 +85,7 @@ const Posts = () => {
 
   const removePostFromList = (postToRemove, userId) => {
     if (postToRemove.user_id !== userId) return false;
-    const newPostsList = posts.filter(post => post.id != postToRemove.id);
+    const newPostsList = posts.filter(post => post.id !== postToRemove.id);
     setPosts(newPostsList);
   }
 

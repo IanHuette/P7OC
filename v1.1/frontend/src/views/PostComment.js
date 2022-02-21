@@ -109,45 +109,59 @@ const PostComment = () => {
     
 
 
+
+
     // TODO
-    // const onClickDelete = async (cmt) => {
-    //   if (!window.confirm(`Voulez-vous vraiment supprimer le commentaire ?`)) return;
-    //   let commentRemoved = false;
-    //   try {
-    //     const APIResponse = await axios.delete(`http://localhost:8080/api/comments/${post.id}?userId=${userData.userData.userId}&postUserId=${post.user_id}`,{
-    //       headers: {
-    //         'Authorization': 'Bearer ' + userData.userData.token
-    //       }
-    //     });
-    //     commentRemoved = APIResponse.data.success;
-    //   } catch (err) {
-    //     console.error(err)
-    //   }
-    //   if (!commentRemoved) {
-    //     alert("Vous ne pouvez pas supprimer ce post !");
-    //   } else {
-    //     // removePostFromList(post, userData.userData.userId);
-    //   }
-    // }
+
+    const removeCommentFromList = (commentToRemove, userId) => {
+      if (commentToRemove.user_id !== userId && !userData.userData.isModerator) return false;
+      const newCommentsList = comments.filter(cmt => cmt.id != commentToRemove.id);
+      setComments(newCommentsList);
+    }
+ 
+    const onClickDelete = async (cmt) => {
+      if (!window.confirm(`Voulez-vous vraiment supprimer le commentaire ?`)) return;
+      let commentRemoved = false;
+      try {
+        const APIResponse = await axios.delete(`http://localhost:8080/api/comments/${cmt.id}?userId=${userData.userData.userId}&commentUserId=${cmt.user_id}`,{
+          headers: {
+            'Authorization': 'Bearer ' + userData.userData.token
+          }
+        });
+        commentRemoved = APIResponse.data.success;
+      } catch (err) {
+        console.error(err)
+      }
+      if (!commentRemoved) {
+        alert("Vous ne pouvez pas supprimer ce commentaire !");
+      } else {
+        removeCommentFromList(cmt, userData.userData.userId);
+      }
+    }
+
 
   return (
-    <div>
-      <h2>Post de {currentPostUsername}</h2>
-        <ul>
-            <li className='newpost'>{post}</li>
-        </ul>
-        <h1>Commentaire</h1>
-        <form className='form' method="post">
-          <input aria-label='publication' type="text" className="input"  placeholder="Poster un commentaire" onChange={onCommentChange}></input>
-          <button className='button-post' onClick={onSubmitComment}>Publier</button>
-      </form>
-        {comments.map((cmt) => {
-          const dateForFront = new Date(cmt.created_at);
-          const dateFR = dateForFront.toLocaleString("fr-FR");
-          return <li key={cmt.id}  className='newpost'>{cmt.username} a posté le {dateFR} <i className="fa-solid fa-pen-to-square" /><i 
-          // onClick={() => onClickDelete(cmt)} 
-          className="fa-solid fa-trash-can" /><br></br>{cmt.comment}</li>;
-        })}
+    <div id="container">
+      <div className="post-size">
+        <h2 className='h2position'>Post de {currentPostUsername}</h2>
+          <ul>
+              <li className='newpost'>{post}</li>
+          </ul>
+          <h1 className='h2position'>Commentaire</h1>
+          <form className='form' method="post">
+            <input aria-label='publication' type="text" className="input"  placeholder="Poster un commentaire" onChange={onCommentChange}></input>
+            <button className='button-post' onClick={onSubmitComment}>Publier</button>
+        </form>
+          {comments.map((cmt) => {
+            const dateForFront = new Date(cmt.created_at);
+            const dateFR = dateForFront.toLocaleString("fr-FR");
+            return <li key={cmt.id} 
+            removeCommentFromList={removeCommentFromList}
+             className='newpost'>{cmt.username} a posté le {dateFR} <i 
+            onClick={() => onClickDelete(cmt)} 
+            className="fa-solid fa-trash-can" /><br></br>{cmt.comment}</li>;
+          })}
+        </div>
     </div>
   )
 }

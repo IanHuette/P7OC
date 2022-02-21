@@ -20,24 +20,14 @@ const Banner = () => {
     
     return (
         <div className="gpm-banner">
-            <h1 className='gpm-title'><img src={logo} alt='Groupomania' className='gpm-logo' />{title}</h1>
+            <div>
+                <h1 className='gpm-title'><img src={logo} alt='Groupomania' className='gpm-logo' />{title}</h1>
+            </div>
             {location.pathname === "/" &&
             <div className='nav'>
-                <Link to ="../profil"><input id="inputName" className="profilbutton" type="button" value ={username} /><i className="fa-solid fa-user"></i></Link>
+                <Link to ="../profil"><i className="fa-solid fa-user"></i><input id="inputName" className="profilbutton" type="button" value ={username} /></Link>
             </div>
             }
-            
-            {location.pathname === "/login" &&
-            <div className='nav'>
-                <Link to ="../signup"><input id="inputName" className="profilbutton" type="button" value ="S'inscrire" /><i className="fa-solid fa-user"></i></Link>
-            </div>
-            }
-
-            {location.pathname === "/signup" &&
-            <div className='nav'>
-                <Link to ="../login"><input id="inputName" className="profilbutton" type="button" value = 'Se Connecter' /><i className="fa-solid fa-user"></i></Link>
-            </div>
-            }       
         </div>
     );
 

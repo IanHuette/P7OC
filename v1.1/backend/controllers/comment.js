@@ -13,7 +13,7 @@ const getAllComments = async (req, res, next) => {
             console.error(err);
             reject(err);
           }
-          con.query(`SELECT c.id, u.username, c.comment, c.created_at 
+          con.query(`SELECT c.id, u.username, c.comment, c.user_id, c.created_at 
             FROM comments c
             JOIN users u ON u.id = c.user_id 
             WHERE c.post_id = ?
@@ -70,66 +70,67 @@ const getAllComments = async (req, res, next) => {
     }
   };
 
-  // TODO
-  // const deleteComment = async (req, res, next) => {
-  //   const postId = req.params.postId;
-  //   const userId = req.query.userId;
-  //   const postUserId = req.query.postUserId;
+  const deleteComment = async (req, res, next) => {
+
+    const commentId = req.params.commentId;
+    const userId = req.query.userId;
+    const commentUserId = req.query.commentUserId;
+
   
-  //   let isModerator = false;
+    let isModerator = false;
   
-  //   const searchModerator = new Promise((accept, reject) => {
-  //     con.query(
-  //       "SELECT isModerator FROM users WHERE id = ?",
-  //       [userId],
-  //       function (err, result) {
-  //         if (err) {
-  //           console.error(err);
-  //           reject(err);
-  //         }
-  //         accept(result);
-  //       });
-  //   });
+    const searchModerator = new Promise((accept, reject) => {
+      con.query(
+        "SELECT isModerator FROM users WHERE id = ?",
+        [userId],
+        function (err, result) {
+          if (err) {
+            console.error(err);
+            reject(err);
+          }
+          accept(result);
+        });
+    });
   
-  //   try {
-  //     const isModeratorRes = await searchModerator;
-  //     isModerator = isModeratorRes[0].isModerator == 1 ? true : false;
-  //   } catch (err) {
-  //     console.error(err);
-  //   } 
+    try {
+      const isModeratorRes = await searchModerator;
+      isModerator = isModeratorRes[0].isModerator == 1 ? true : false;
+    } catch (err) {
+      console.error(err);
+    } 
   
-  //   // pour une raison étrange, le middleware d'authentification provoque une erreur de headers pour cette route DELETE...
-  //   const token = req.headers.authorization.split(' ')[1].length >= 2 ? req.headers.authorization.split(' ')[1] : ''; // extrait le token du header authorization / split pour récupérer tout après l'espace dans le header
-  //   const decodedToken = jwt.verify(token, process.env.token);  // fonction verify pour décoder le token (si il n'est pas valide une erreur sera génégée)
-  //   const decryptedUserId = decodedToken.userId ? decodedToken.userId : 0; // extrait de l'userID du token
+    // pour une raison étrange, le middleware d'authentification provoque une erreur de headers pour cette route DELETE...
+    const token = req.headers.authorization.split(' ')[1].length >= 2 ? req.headers.authorization.split(' ')[1] : ''; // extrait le token du header authorization / split pour récupérer tout après l'espace dans le header
+    const decodedToken = jwt.verify(token, process.env.token);  // fonction verify pour décoder le token (si il n'est pas valide une erreur sera génégée)
+    const decryptedUserId = decodedToken.userId ? decodedToken.userId : 0; // extrait de l'userID du token
   
-  //   if (postUserId!= decryptedUserId && !isModerator) { 
-  //     res.status(401).json(unauthorizedObj);
-  //   } 
-  //   // ici on est sûrs que même si un utilisateur authentifié tente d'effacer le post d'un autre user, la paire id/user_id ne matchera pas
-  //   else {
-  //     const deletePostQuery = new Promise((accept, reject) => {
-  //       con.query(
-  //         "DELETE FROM posts WHERE (id) = (?)",
-  //         [postId],
-  //         err => {
-  //           if (err) reject(false);
-  //           accept(true);
-  //         }
-  //       );
-  //     }); 
-  //     try {
-  //       await deletePostQuery;
-  //       res.status(200).json({message: 'Post supprimé !', success: true});
-  //     } catch (err) {
-  //       console.error(err);
-  //       res.status(500).json({ message: serverErrorMessage });      
-  //     }
-  //   }
-  // };
+    if (commentUserId!= decryptedUserId && !isModerator) { 
+      res.status(401).json(unauthorizedObj);
+    } 
+    // ici on est sûrs que même si un utilisateur authentifié tente d'effacer le post d'un autre user, la paire id/user_id ne matchera pas
+    else {
+      const deletePostQuery = new Promise((accept, reject) => {
+        con.query(
+          "DELETE FROM comments WHERE (id) = (?)",
+          [commentId],
+          err => {
+            if (err) reject(false);
+            accept(true);
+          }
+        );
+      }); 
+      try {
+        await deletePostQuery;
+        res.status(200).json({message: 'Post supprimé !', success: true});
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: serverErrorMessage });      
+      }
+    }
+  };
 
 module.exports = {
     getAllComments,
     createComment,
-    // deleteComment
+    deleteComment
 }

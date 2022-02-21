@@ -102,7 +102,7 @@ const Post = props => {
             <i className="fa-solid fa-ban" onClick={onCancelUpdate}></i>
           </span>
         </p>
-      : <li className="newpost">{username} posté le {dateFR} <i onClick={onToggleEditionMode} className="fa-solid fa-pen-to-square" />
+      : <li className="newpost">{username} a posté le {dateFR} <i onClick={onToggleEditionMode} className="fa-solid fa-pen-to-square" />
           <i onClick={onClickDelete} className="fa-solid fa-trash-can" /><br></br>{postContent}<br></br>
           <Link to ={params} >Commentaire</Link>
         </li>

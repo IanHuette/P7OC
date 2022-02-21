@@ -33,7 +33,9 @@ const Banner = () => {
             }
             {location.pathname.startsWith("/comments") &&
             <div className='btnleft'>
-                <Link to ="../profil" aria-label='Profil'><i className="fa-solid fa-user"></i><input id="inputName" className="profilbutton" type="button" value ={username} /></Link>
+                <div className='nav'>
+                    <Link to ="../profil" aria-label='Profil'><i className="fa-solid fa-user"></i><input id="inputName" className="profilbutton" type="button" value ={username} /></Link>
+                </div>
                 <Link to ="../" aria-label='Home'><i className="fa-solid fa-arrow-left"></i></Link>
             </div>
             }
